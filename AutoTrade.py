@@ -37,6 +37,7 @@ import requests
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 from datetime import datetime, timedelta
+from pydantic import BaseModel, Field
 
 # Pandas 출력 옵션 설정
 pd.set_option("display.max_rows", None)
@@ -59,6 +60,10 @@ limit_hourly_count = int(os.getenv("LIMIT_HOURLY_COUNT", 60))
 limit_weekly_count = int(os.getenv("LIMIT_WEEKLY_COUNT", 60))
 
 
+UseCacheNews = True
+UseCacheYoutube = True
+
+
 def get_fear_and_greed_index():
     url = "https://api.alternative.me/fng/"
     response = requests.get(url)
@@ -73,83 +78,76 @@ def get_fear_and_greed_index():
 
 
 def get_news_headlines():
-    api_key = os.getenv("SERPAPI_API_KEY")
-    params = {
-        "engine": "google_news",
-        "q": f"{target} {target_name} cryptocurrency",
-        "api_key": api_key,
-    }
 
-    url = "https://serpapi.com/search"
+    data = None
 
-    try:
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        data = response.json()
+    ###############################################################
+    # 데이터 가져오기
+    if not UseCacheNews:
+        api_key = os.getenv("SERPAPI_API_KEY")
+        params = {
+            "engine": "google_news",
+            "q": f"{target} {target_name} cryptocurrency",
+            "api_key": api_key,
+        }
 
-        news_result = data.get("news_results", [])
-        headlines = []
-        tempHeadlines = []
-        for news in news_result:
-            headline = {"title": news.get("title", ""), "date": news.get("date", "")}
+        url = "https://serpapi.com/search"
 
-            tempHeadlines.append(headline)
-            if len(json.dumps(tempHeadlines)) > limit_news:
-                break
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
 
-            headlines.append(headline)
+            now = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"response/news_{now}.json"
+            with open(filename, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
 
-        return headlines
-    except requests.RequestException as e:
-        print(f"뉴스 헤드라인을 가져오는 중 오류 발생: {e}")
-        return []
+        except requests.RequestException as e:
+            print(f"뉴스 헤드라인을 가져오는 중 오류 발생: {e}")
+            return []
+    else:
+        data = json.load(
+            open(
+                "response/"
+                + max(
+                    [
+                        f
+                        for f in os.listdir("response")
+                        if f.startswith("news_") and f.endswith(".json")
+                    ],
+                    key=lambda x: os.path.getctime(os.path.join("response", x)),
+                ),
+                "r",
+                encoding="utf-8",
+            )
+        )
 
+    news_result = data.get("news_results", [])
+    headlines = []
+    tempHeadlines = []
+    for news in news_result:
+        headline = {
+            "title": news.get("title", ""),
+            "date": news.get("date", ""),
+        }
 
-def get_news_headlines():
+        tempHeadlines.append(headline)
+        if len(json.dumps(tempHeadlines)) > limit_news:
+            break
 
-    testApi = True
+        headlines.append(headline)
 
-    api_key = os.getenv("SERPAPI_API_KEY")
-    params = {
-        "engine": "google_news",
-        "q": f"{target} {target_name} cryptocurrency",
-        "api_key": api_key,
-    }
-
-    url = "https://serpapi.com/search"
-
-    try:
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        data = response.json()
-
-        news_result = data.get("news_results", [])
-        headlines = []
-        tempHeadlines = []
-        for news in news_result:
-            headline = {"title": news.get("title", ""), "date": news.get("date", "")}
-
-            tempHeadlines.append(headline)
-            if len(json.dumps(tempHeadlines)) > limit_news:
-                break
-
-            headlines.append(headline)
-
-        return headlines
-    except requests.RequestException as e:
-        print(f"뉴스 헤드라인을 가져오는 중 오류 발생: {e}")
-        return []
+    return headlines
 
 
 # 유튜브에서 최신 관련 영상을 찾아온다.
 # 찾아온 영상은 제목, 설명, 조회수, 좋아요, 구독자수, 캡션을 갖고있다.
 def get_youtube_captions():
 
-    testApi = True
-
     ###############################################################
     # 데이터 가져오기
-    if not testApi:
+    if not UseCacheYoutube:
         api_key = os.getenv("YOUTUBE_API_KEY")
         youtube = build("youtube", "v3", developerKey=api_key)
 
@@ -302,6 +300,24 @@ def get_youtube_captions():
         return captions[0]
     else:
         return filtered_captions[0]
+
+
+from enum import Enum
+from typing import Literal
+from pydantic import BaseModel, Field
+
+
+class TradingDecisionEnum(str, Enum):
+    buy = "buy"
+    sell = "sell"
+    hold = "hold"
+
+
+class TradingDecision(BaseModel):
+    decision: TradingDecisionEnum = Field(
+        ..., description="The trading decision: 'buy', 'sell', or 'hold'"
+    )
+    reason: str = Field(..., description="Detailed reason for the trading decision")
 
 
 def ai_trading():
@@ -488,15 +504,7 @@ def ai_trading():
 
     # 2. AI에게 데이터 제공하고 판단 받기
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": f"""You are an expert in {target_name} investing. 
+    systemMessage = f"""You are an expert in {target_name} investing. 
 Based on the provided chart data, news headlines, YouTube video information, and market indicators, please decide whether to buy, sell, or hold at the current moment.
 
 Please consider the following factors in your analysis:
@@ -522,27 +530,62 @@ Please consider the following factors in your analysis:
 
 7. Current balance: Consider the amount of {currency} and {target} currently held when making your decision.
 
-8. When making your decision, please consider short-term, medium-term, and long-term perspectives for a comprehensive judgment. Also, please provide a detailed explanation of the current market situation and future outlook.
+8. When making your decision, please consider short-term, medium-term, and long-term perspectives for a comprehensive judgment. Also, please provide a detailed explanation of the current market situation and future outlook."""
 
-response in json format.
-
-Response examples:
-{{"decision":"buy", "reason":"Detailed reason for buying based on technical indicators, news impact, and YouTube video analysis"}}
-{{"decision":"sell", "reason":"Detailed reason for selling based on technical indicators, news impact, and YouTube video analysis"}}
-{{"decision":"hold", "reason":"Detailed reason for holding based on technical indicators, news impact, and YouTube video analysis"}}""",
-                    }
-                ],
-            },
-            {
-                "role": "user",
-                "content": f"""Current investment status: {json.dumps(filtered_balances)}
+    userMessage = f"""Current investment status: {json.dumps(filtered_balances)}
 Oderbook: {json.dumps(orderbook)}
 Hourly OHLCV with indicators: {df_hourly.to_json()}
 Daily OHLCV with indicators: {df_daily.to_json()}
 Weekly OHLCV with indicators: {df_weekly.to_json()}
 Fear and Greed Index: {json.dumps(fng_index)}
 Latest News Headlines: {json.dumps(news_headlines)}
-YouTube Video Information: {json.dumps(youtube_caption)}""",
+YouTube Video Information: {json.dumps(youtube_caption)}"""
+
+    responseFormat = {
+        "type": "json_schema",
+        "json_schema": {
+            "name": TradingDecision.__name__,
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "decision": {
+                        "type": "string",
+                        "description": "The trading decision: 'buy', 'sell', or 'hold'",
+                        "enum": ["buy", "sell", "hold"],
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "Detailed reason for the trading decision",
+                    },
+                },
+                "required": ["decision", "reason"],
+                "additionalProperties": False,
+            },
+        },
+    }
+
+    # 현재 날짜와 시간을 포함한 파일명 생성
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"request/GPT-{now}.json"
+
+    # messages를 JSON 파일로 저장
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(f"{systemMessage}\n\n\n\n{userMessage}")
+
+    PrintsPretty("MESSAGES", {"System": systemMessage, "User": userMessage})
+    PrintsPretty("SCHEMA", responseFormat)
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini-2024-07-18",
+        messages=[
+            {
+                "role": "system",
+                "content": systemMessage,
+            },
+            {
+                "role": "user",
+                "content": userMessage,
             },
         ],
         temperature=1,
@@ -550,52 +593,27 @@ YouTube Video Information: {json.dumps(youtube_caption)}""",
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
-        response_format={"type": "json_object"},
+        response_format=responseFormat,
     )
 
-    print("------------------------------------------------")
-    print("-- GPT RESPONSE")
-    print("------------------------------------------------")
-    print(response)
-    print("")
-
-    # json 형식으로 변환
     result = json.loads(response.choices[0].message.content)
-    # {
-    #   "decision":"hold",
-    #   "reason":"The short-term trend shows a sideways movement with recent closing prices reflecting minimal fluctuations. Entering a position now may not provide significant benefits, suggesting a wait-and-see approach until a clearer trend emerges."
-    # }
+    trading_decision = TradingDecision(**result)
+    PrintsPretty("GPT RESULT", trading_decision.model_dump_json(indent=4))
 
-    print("------------------------------------------------")
-    print("-- GPT RESULT")
-    print("------------------------------------------------")
-    print(result)
-    print("")
-    decision = result["decision"]
-    reason = result["reason"]
+    decision = trading_decision.decision
+    reason = trading_decision.reason
 
     # 3. AI의 판단에 따라 실제 매수매도하기
 
-    print("------------------------------------------------")
-    print("-- UPBIT Balance")
-    print("------------------------------------------------")
-    upbit_target_balance = upbit.get_balance(target)
-    upbit_currency_balance = upbit.get_balance(currency)
-
-    print(currency + " : ", upbit.get_balance(currency))
-    print(target + " : ", upbit.get_balance(target))
-
     if decision == "buy":
         # 매수
-        print("매수")
+        PrintsPretty("RESULT", "매수")
     elif decision == "sell":
         # 매도
-        print("매도")
+        PrintsPretty("RESULT", "매도")
     elif decision == "hold":
         # 지나감
-        print("HOLD")
-
-    upbit.get_balance("KRW")
+        PrintsPretty("RESULT", "대기")
 
 
 def add_indicators(df):
