@@ -1,0 +1,181 @@
+{
+    "kind": "youtube#searchListResponse",
+    "etag": "HOMvtxEKeE-8Vi2jlienGxlKTPc",
+    "regionCode": "KR",
+    "pageInfo": {
+        "totalResults": 5,
+        "resultsPerPage": 5
+    },
+    "items": [
+        {
+            "kind": "youtube#searchResult",
+            "etag": "i4MNyNucvaBcBQPn8wlXFH0WxnA",
+            "id": {
+                "kind": "youtube#video",
+                "videoId": "6pHtKDc_2XM"
+            },
+            "snippet": {
+                "publishedAt": "2024-10-03T01:15:00Z",
+                "channelId": "UCo7Tdb3WobsoO1SV377fi3g",
+                "title": "Brace For A Deadly Bitcoin Market Bloodbath. Gareth Soloway Crypto",
+                "description": "Brace For A Deadly Bitcoin Market Bloodbath. Gareth Soloway #crypto #bitcoin News #bitcoinbtc Crash Crypto News Hello ...",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/6pHtKDc_2XM/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/6pHtKDc_2XM/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/6pHtKDc_2XM/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "Crypto Highlights",
+                "liveBroadcastContent": "none",
+                "publishTime": "2024-10-03T01:15:00Z"
+            }
+        },
+        {
+            "kind": "youtube#searchResult",
+            "etag": "KsVLIPtgeCUNq1vxi55fTu2Pm5I",
+            "id": {
+                "kind": "youtube#video",
+                "videoId": "5ZnJP6l-lPk"
+            },
+            "snippet": {
+                "publishedAt": "2024-10-03T05:37:27Z",
+                "channelId": "UC8cVr_TrYD8o3u9E7E2r_5Q",
+                "title": "Will Algorand ALGO Be at The Top Altcoins Season | Algorand Price Prediction 2025",
+                "description": "In this video, we'll delve into Algorand's price prediction. We'll closely examine what makes Algorand stand out, explore its growth ...",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/5ZnJP6l-lPk/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/5ZnJP6l-lPk/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/5ZnJP6l-lPk/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "What Crypto ",
+                "liveBroadcastContent": "none",
+                "publishTime": "2024-10-03T05:37:27Z"
+            }
+        },
+        {
+            "kind": "youtube#searchResult",
+            "etag": "yeXMtNqyKHWlbxOxaQWma3fK-qw",
+            "id": {
+                "kind": "youtube#video",
+                "videoId": "BPYD9D0beA4"
+            },
+            "snippet": {
+                "publishedAt": "2024-10-02T13:15:01Z",
+                "channelId": "UCoH1bLYgriiUEWrK2Y3P0rg",
+                "title": "NEW How to Trade Meme Coins with Dexscreener NEW Tool (BubbleMaps)",
+                "description": "Meme Coin Mastery (50% OFF) https://jontradingcrypto.com/courses/meme-coin-mastery/ (To Pay w Crypto DM Twitter ...",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/BPYD9D0beA4/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/BPYD9D0beA4/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/BPYD9D0beA4/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "Jon Trading",
+                "liveBroadcastContent": "none",
+                "publishTime": "2024-10-02T13:15:01Z"
+            }
+        },
+        {
+            "kind": "youtube#searchResult",
+            "etag": "EZEX_28iey2GWlo10b3DRY9Ku6I",
+            "id": {
+                "kind": "youtube#video",
+                "videoId": "choyo23sIq4"
+            },
+            "snippet": {
+                "publishedAt": "2024-10-02T18:30:26Z",
+                "channelId": "UCgdV_ODxK17lHpUuypWnA8g",
+                "title": "CRYPTO GAMING GEM: LOW-CAP OPPORTUNITY READY TO EXPLODE: HIGHEST OPPORTUNITY PROJECT: MANIFEST MONEY",
+                "description": "618crypto @0618io 1000 USDT GIVEAWAY ⚠️ Financial Disclaimer: Please note that we are not financial advisors.",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/choyo23sIq4/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/choyo23sIq4/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/choyo23sIq4/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "618 Crypto",
+                "liveBroadcastContent": "none",
+                "publishTime": "2024-10-02T18:30:26Z"
+            }
+        },
+        {
+            "kind": "youtube#searchResult",
+            "etag": "xsp5K_bteXCfQlWKUN5-p6E6UDQ",
+            "id": {
+                "kind": "youtube#video",
+                "videoId": "uY-NJp2-gAY"
+            },
+            "snippet": {
+                "publishedAt": "2024-10-03T00:04:16Z",
+                "channelId": "UCjpkwsuHgYx9fBE0ojsJ_-w",
+                "title": "🚨WARNING! SEC APPEALS RIPPLE XRP CASE RULING!",
+                "description": "Crypto News: The SEC & Gary Gensler have filed a Notice of Appeal of Judge Torres's Ruling in the Ripple XRP case lawsuit.",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/uY-NJp2-gAY/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/uY-NJp2-gAY/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/uY-NJp2-gAY/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "Thinking Crypto",
+                "liveBroadcastContent": "none",
+                "publishTime": "2024-10-03T00:04:16Z"
+            }
+        }
+    ]
+}
