@@ -23,6 +23,11 @@
 # 항상 주의가 필요하며, 지속적인 모니터링과 시스템 개선이 요구됩니다.
 
 
+# youtube 검색 시스템의 한계때문에 하루에 50번 이상 실행할 수 없다.
+# gpt-4o-mini의 경우 하루에 $0.15 를 사용한다.
+#
+
+
 # 라이브러리 가져오기
 import os
 import re
@@ -43,6 +48,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Literal
+import tiktoken
 
 
 # Pandas 출력 옵션 설정
@@ -60,7 +66,6 @@ currency_name = os.getenv("CURRENCY_NAME")  # won
 target = os.getenv("TARGET")  # ETH
 target_name = os.getenv("TARGET_NAME")  # Ethereum
 trade_code = os.getenv("TRADE_CODE")
-limit_news = int(os.getenv("LIMIT_NEWS", 3000))
 limit_daily_count = int(os.getenv("LIMIT_DAILY_COUNT", 60))
 limit_hourly_count = int(os.getenv("LIMIT_HOURLY_COUNT", 60))
 limit_weekly_count = int(os.getenv("LIMIT_WEEKLY_COUNT", 60))
@@ -70,10 +75,16 @@ UseCacheYoutube = False
 
 # Enable TestMode
 # UseCacheNews = True
-# UseCacheYoutube = True
+UseCacheYoutube = True
+
+MODEL_NAME = "gpt-4o-mini"
+MODEL_TOKENIZER_NAME = "gpt-4o-mini"
 
 
-def get_fear_and_greed_index():
+# region Collect Data Utils
+
+
+def GetFearAndGreedIndex():
     url = "https://api.alternative.me/fng/"
     result = requests.get(url)
     if result.status_code == 200:
@@ -86,72 +97,50 @@ def get_fear_and_greed_index():
         return None
 
 
-def get_news_headlines():
+def GetLatestNews():
+    from GoogleNews import GoogleNews
 
-    data = None
+    NEWS_REACH_DAYS = os.getenv("NEWS_REACH_DAYS", "14")
 
-    ###############################################################
-    # 데이터 가져오기
-    if not UseCacheNews:
-        api_key = os.getenv("SERPAPI_API_KEY")
-        params = {
-            "engine": "google_news",
-            "q": f"{target} {target_name} cryptocurrency",
-            "api_key": api_key,
-        }
+    googlenews = GoogleNews(lang="en", region="US")
+    googlenews.set_period(f"{NEWS_REACH_DAYS}d")
+    googlenews.set_encode("utf-8")
 
-        url = "https://serpapi.com/search"
+    search_query = f"{target} {target_name} cryptocurrency"
+    googlenews.search(search_query)
 
-        # try:
-        result = requests.get(url, params=params)
-        result.raise_for_status()
-        data = result.json()
+    NEWS_LIMIT_LENGTH = int(os.getenv("NEWS_LIMIT_LENGTH", 3000))
 
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"cache/news_{now}.json"
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-
-        # except requests.RequestException as e:
-        # 오류 발생시 멈춰야함
-    else:
-        data = json.load(
-            open(
-                "cache/"
-                + max(
-                    [
-                        f
-                        for f in os.listdir("cache")
-                        if f.startswith("news_") and f.endswith(".json")
-                    ],
-                    key=lambda x: os.path.getctime(os.path.join("cache", x)),
-                ),
-                "r",
-                encoding="utf-8",
-            )
-        )
-
-    news_result = data.get("news_results", [])
     headlines = []
     tempHeadlines = []
-    for news in news_result:
-        headline = {
-            "title": news.get("title", ""),
-            "date": news.get("date", ""),
-        }
+    page = 1
+    max_pages = int(os.getenv("NEWS_REACH_PAGES", "5"))
 
-        tempHeadlines.append(headline)
-        if len(json.dumps(tempHeadlines)) > limit_news:
-            break
+    while page <= max_pages:
+        news_results = googlenews.page_at(page)
+        for news in news_results:
+            headline = {
+                "title": news["title"],
+                "date": news["date"],
+            }
 
-        headlines.append(headline)
+            tempHeadlines.append(headline)
+            if len(json.dumps(tempHeadlines)) > NEWS_LIMIT_LENGTH:
+                page = max_pages
+                break
+
+            headlines.append(headline)
+
+        page += 1
+
+    googlenews.clear()  # 결과를 지웁니다
 
     return headlines
 
 
 # 유튜브에서 최신 관련 영상을 찾아온다.
 # 찾아온 영상은 제목, 설명, 조회수, 좋아요, 구독자수, 캡션을 갖고있다.
-def get_youtube_captions():
+def GetLatestYoutube():
 
     ###############################################################
     # 데이터 가져오기
@@ -319,6 +308,132 @@ def get_youtube_captions():
         return filtered_captions[0]
 
 
+def add_indicators(df):
+    # RSI
+    df["RSI"] = ta.momentum.RSIIndicator(df["close"]).rsi()
+
+    # MACD
+    macd = ta.trend.MACD(df["close"])
+    df["MACD"] = macd.macd()
+    df["MACD_signal"] = macd.macd_signal()
+    df["MACD_diff"] = macd.macd_diff()
+
+    # Bollinger Bands
+    bollinger = ta.volatility.BollingerBands(df["close"])
+    df["BB_high"] = bollinger.bollinger_hband()
+    df["BB_low"] = bollinger.bollinger_lband()
+    df["BB_mid"] = bollinger.bollinger_mavg()
+
+    # Stochastic Oscillator
+    stoch = ta.momentum.StochasticOscillator(df["high"], df["low"], df["close"])
+    df["Stoch_k"] = stoch.stoch()
+    df["Stoch_d"] = stoch.stoch_signal()
+
+    # 이동평균선 추가
+    # for period in [5, 10, 20, 60, 120]:
+    for period in [5, 10, 20]:
+        df[f"MA_{period}"] = ta.trend.SMAIndicator(
+            df["close"], window=period
+        ).sma_indicator()
+
+    return df
+
+
+# endregion
+
+# region Logging Utils
+
+LogFileName = ""
+LogData = []
+
+
+def Log(name, data=None):
+    time = datetime.datetime.now(
+        datetime.timezone(datetime.timedelta(hours=9))
+    ).strftime("%Y-%m-%d %H:%M:%S.%f%z")[:-3]
+
+    print(f"{time} {name}")
+
+    # 디렉토리가 없으면 생성
+    os.makedirs(os.path.dirname(LogFileName), exist_ok=True)
+
+    # data를 JSON으로 저장 가능한 형태로 변환
+    if data and not isinstance(data, (str, dict, list)):
+        try:
+            data = json.loads(json.dumps(Dump(data)))
+        except:
+            data = str(data)
+
+    LogData.append(
+        {
+            "time": time,
+            "name": name,
+            "data": data,
+        }
+    )
+
+    # dump test
+    json.dumps(LogData, indent=4, ensure_ascii=False)
+
+
+def Dump(data):
+    if isinstance(data, (int, float, str, bool, type(None))):
+        return data
+
+    try:
+        json.dumps(data)
+        return data
+    except:
+        pass  # JSON으로 직렬화할 수 없는 경우 계속 진행
+
+    if isinstance(data, dict):
+        rst = {}
+        for key, value in data.items():
+            rst[key] = Dump(value)
+    elif isinstance(data, list):
+        rst = []
+        for item in data:
+            rst.append(Dump(item))
+    elif isinstance(data, Enum):
+        rst = data.value
+    elif hasattr(data, "__dict__"):
+        rst = Dump(data.__dict__)
+    else:
+        rst = data
+
+    return rst
+
+
+def BeginLog():
+    now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    LogFileName = f"history/{now}.log"
+    LogData = []
+
+
+def EndLog():
+
+    # 파일 열기 모드를 'a'로 변경하여 append 모드로 열기
+    with open(LogFileName, "w", encoding="utf-8") as f:
+        f.write(json.dumps(LogData, indent=4, ensure_ascii=False))  # 줄바꿈 추가
+
+
+# endregion
+
+# region Utils
+
+
+def count_tokens(text):
+    try:
+        encoding = tiktoken.encoding_for_model(MODEL_TOKENIZER_NAME)
+        return len(encoding.encode(text))
+    except:
+        encoding = tiktoken.encoding_for_model("gpt-4o-mini")
+        return len(encoding.encode(text))
+
+
+# endregion
+
+
 class TradingDecisionEnum(str, Enum):
     buy = "buy"
     sell = "sell"
@@ -336,7 +451,19 @@ class TradingDecision(BaseModel):
     )
 
 
-def ai_trading():
+def Execute():
+
+    # 공포탐욕지수 가져오기
+    fngData = GetFearAndGreedIndex()
+    Log("[Upbit] Get Fear and Greed Index", fngData)
+
+    # 뉴스 헤드라인 가져오기
+    newsData = GetLatestNews()
+    Log("[Upbit] Get Google News", newsData)
+
+    # YouTube 캡션 가져오기
+    youtubeData = GetLatestYoutube()
+    Log("[Upbit] Get Youtube captions", youtubeData)
 
     # 초기화하기
     client = OpenAI()
@@ -408,18 +535,6 @@ def ai_trading():
     df_weekly = df_weekly.to_json()
     Log("[Upbit] Get OHLCV Weekly", json.loads(df_weekly))
 
-    # 공포탐욕지수 가져오기
-    fng_index = get_fear_and_greed_index()
-    Log("[Upbit] Get Fear and Greed Index", fng_index)
-
-    # 뉴스 헤드라인 가져오기
-    news_headlines = get_news_headlines()
-    Log("[Upbit] Get Google News", news_headlines)
-
-    # YouTube 캡션 가져오기
-    youtube_caption = get_youtube_captions()
-    Log("[Upbit] Get Youtube captions", youtube_caption)
-
     # 2. AI에게 데이터 제공하고 판단 받기
     systemMessage = f"""You are an expert in {target_name} investing. 
 Based on the provided chart data, news headlines, YouTube video information, and market indicators, please decide whether to buy, sell, or hold at the current moment.
@@ -465,9 +580,9 @@ Oderbook: {json.dumps(orderbook)}
 Hourly OHLCV with indicators: {df_hourly}
 Daily OHLCV with indicators: {df_daily}
 Weekly OHLCV with indicators: {df_weekly}
-Fear and Greed Index: {json.dumps(fng_index)}
-Latest News Headlines: {json.dumps(news_headlines)}
-YouTube Video Information: {json.dumps(youtube_caption)}"""
+Fear and Greed Index: {json.dumps(fngData)}
+Latest News Headlines: {json.dumps(newsData)}
+YouTube Video Information: {json.dumps(youtubeData)}"""
     Log("[GPT] Create User Message", userMessage)
 
     responseFormat = {
@@ -498,19 +613,23 @@ YouTube Video Information: {json.dumps(youtube_caption)}"""
         },
     }
 
-    Log("[GPT] Request GPT")
+    messages = [
+        {
+            "role": "system",
+            "content": systemMessage,
+        },
+        {
+            "role": "user",
+            "content": userMessage,
+        },
+    ]
+
+    Log(
+        f"[GPT] Request GPT (Model:{MODEL_NAME}, Expect Tokens: {count_tokens(json.dumps(messages))})"
+    )
     response = client.chat.completions.create(
-        model="gpt-4o-mini-2024-07-18",
-        messages=[
-            {
-                "role": "system",
-                "content": systemMessage,
-            },
-            {
-                "role": "user",
-                "content": userMessage,
-            },
-        ],
+        model=MODEL_NAME,
+        messages=messages,
         temperature=1,
         max_tokens=2048,
         top_p=1,
@@ -520,6 +639,9 @@ YouTube Video Information: {json.dumps(youtube_caption)}"""
     )
 
     Log("[GPT] Response GPT", response)
+    Log(
+        "[GPT] Usage GPT (completion_tokens: {response.usage.completion_tokens}, prompt_tokens: {response.usage.prompt_tokens}, total_tokens: {response.usage.total_tokens})"
+    )
 
     result = json.loads(response.choices[0].message.content)
     trading_decision = TradingDecision(**result)
@@ -530,173 +652,31 @@ YouTube Video Information: {json.dumps(youtube_caption)}"""
     percentage = trading_decision.percentage
 
     # 3. AI의 판단에 따라 실제 매수매도하기
-
     if decision == "buy":
         # 매수
-        Log(f"[Upbit] Buy({percentage * currency_balance['balance']})")
+        buy_amount = float(currency_balance["balance"]) * (percentage / 100)
+        Log(f"[Upbit] Buy({buy_amount})")
     elif decision == "sell":
         # 매도
-        Log(f"[Upbit] Sell({percentage * target_balance['balance']})")
+        sell_amount = float(target_balance["balance"]) * (percentage / 100)
+        Log(f"[Upbit] Sell({sell_amount})")
     elif decision == "hold":
         # 지나감
         Log(f"[Upbit] Hold")
 
 
-def add_indicators(df):
-    # RSI
-    df["RSI"] = ta.momentum.RSIIndicator(df["close"]).rsi()
-
-    # MACD
-    macd = ta.trend.MACD(df["close"])
-    df["MACD"] = macd.macd()
-    df["MACD_signal"] = macd.macd_signal()
-    df["MACD_diff"] = macd.macd_diff()
-
-    # Bollinger Bands
-    bollinger = ta.volatility.BollingerBands(df["close"])
-    df["BB_high"] = bollinger.bollinger_hband()
-    df["BB_low"] = bollinger.bollinger_lband()
-    df["BB_mid"] = bollinger.bollinger_mavg()
-
-    # Stochastic Oscillator
-    stoch = ta.momentum.StochasticOscillator(df["high"], df["low"], df["close"])
-    df["Stoch_k"] = stoch.stoch()
-    df["Stoch_d"] = stoch.stoch_signal()
-
-    # 이동평균선 추가
-    # for period in [5, 10, 20, 60, 120]:
-    for period in [5, 10, 20]:
-        df[f"MA_{period}"] = ta.trend.SMAIndicator(
-            df["close"], window=period
-        ).sma_indicator()
-
-    return df
-
-
-def PrintsPretty(name, data):
-    print("------------------------------------------------")
-    print("-- ", name)
-    print("------------------------------------------------")
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if isinstance(value, str):
-                try:
-                    json_data = json.loads(value)
-                    print(
-                        f"{key} : {json.dumps(json_data, indent=4, ensure_ascii=False)}"
-                    )
-                except json.JSONDecodeError:
-                    print(f"{key} : {value}")
-            else:
-                print(f"{key} : {json.dumps(value, indent=4, ensure_ascii=False)}")
-    elif isinstance(data, str):
-        try:
-            json_data = json.loads(data)
-            print(json.dumps(json_data, indent=4, ensure_ascii=False))
-        except json.JSONDecodeError:
-            print(data)
-    elif isinstance(data, list):
-        for item in data:
-            if isinstance(item, dict):
-                print(json.dumps(item, indent=4, ensure_ascii=False))
-            elif isinstance(item, str):
-                try:
-                    json_data = json.loads(item)
-                    print(json.dumps(json_data, indent=4, ensure_ascii=False))
-                except json.JSONDecodeError:
-                    print(item)
-            else:
-                print(item)
-    else:
-        print(json.dumps(data, indent=4, ensure_ascii=False))
-
-
-def Prints(name, data):
-    print("------------------------------------------------")
-    print("-- ", name)
-    print("------------------------------------------------")
-    if isinstance(data, dict):
-        for key, value in data.items():
-            print(f"{key} : {value}")
-    elif isinstance(data, list):
-        for index, item in enumerate(data):
-            print(f"{index}: {item}")
-    else:
-        print(data)
-
-
-LogFileName = ""
-LogData = []
-
-
-def Log(name, data=None):
-    time = datetime.datetime.now(
-        datetime.timezone(datetime.timedelta(hours=9))
-    ).strftime("%Y-%m-%d %H:%M:%S.%f%z")[:-3]
-
-    print(f"{time} {name}")
-
-    # 디렉토리가 없으면 생성
-    os.makedirs(os.path.dirname(LogFileName), exist_ok=True)
-
-    # data를 JSON으로 저장 가능한 형태로 변환
-    if data and not isinstance(data, (str, dict, list)):
-        try:
-            data = json.loads(json.dumps(Dump(data)))
-        except:
-            data = str(data)
-
-    LogData.append(
-        {
-            "time": time,
-            "name": name,
-            "data": data,
-        }
-    )
-
-    # 파일 열기 모드를 'a'로 변경하여 append 모드로 열기
-    with open(LogFileName, "w", encoding="utf-8") as f:
-        f.write(json.dumps(LogData, indent=4, ensure_ascii=False))  # 줄바꿈 추가
-
-
-def Dump(data):
-    if isinstance(data, (int, float, str, bool, type(None))):
-        return data
-
-    try:
-        json.dumps(data)
-        return data
-    except:
-        pass  # JSON으로 직렬화할 수 없는 경우 계속 진행
-
-    if isinstance(data, dict):
-        rst = {}
-        for key, value in data.items():
-            rst[key] = Dump(value)
-    elif isinstance(data, list):
-        rst = []
-        for item in data:
-            rst.append(Dump(item))
-    elif isinstance(data, Enum):
-        rst = data.value
-    elif hasattr(data, "__dict__"):
-        rst = Dump(data.__dict__)
-    else:
-        rst = data
-
-    return rst
-
-
 while True:
-    now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    LogFileName = f"history/{now}.log"
-    LogData = []
 
     try:
-        ai_trading()
+        BeginLog()
+
+        Execute()
+
+        EndLog()
+
         time.sleep(3600)
+
     except Exception as e:
         print(e, file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
-        Log(f"Error {e}", str(traceback.format_exc()))
         time.sleep(60)
