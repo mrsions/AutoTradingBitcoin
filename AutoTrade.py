@@ -27,10 +27,14 @@
 # gpt-4o-mini의 경우 하루에 $0.15 를 사용한다.
 #
 
+# 카멜작명법을 사용한다.
+
 
 # 라이브러리 가져오기
+import glob
 import os
 import re
+import sqlite3
 import time
 import sys
 import pyupbit
@@ -61,24 +65,169 @@ load_dotenv()
 upbit_akey = os.getenv("UPBIT_ACCESS_KEY")
 upbit_skey = os.getenv("UPBIT_SECRET_KEY")
 openai_key = os.getenv("OPENAI_API_KEY")
-currency = os.getenv("CURRENCY")  # KRW
+currency_code = os.getenv("CURRENCY_CODE")  # KRW
 currency_name = os.getenv("CURRENCY_NAME")  # won
-target = os.getenv("TARGET")  # ETH
+target_code = os.getenv("TARGET_CODE")  # ETH
 target_name = os.getenv("TARGET_NAME")  # Ethereum
 trade_code = os.getenv("TRADE_CODE")
 limit_daily_count = int(os.getenv("LIMIT_DAILY_COUNT", 60))
 limit_hourly_count = int(os.getenv("LIMIT_HOURLY_COUNT", 60))
 limit_weekly_count = int(os.getenv("LIMIT_WEEKLY_COUNT", 60))
-
-UseCacheNews = False
-UseCacheYoutube = False
-
-# Enable TestMode
-# UseCacheNews = True
-UseCacheYoutube = True
+db_path = "trading_decisions.sqlite"
 
 MODEL_NAME = "gpt-4o-mini"
 MODEL_TOKENIZER_NAME = "gpt-4o-mini"
+
+# 초기화하기
+client = OpenAI()
+upbit = pyupbit.Upbit(upbit_akey, upbit_skey)
+
+# region Utils
+
+db_decisions_id = "id"
+db_decisions_decision = "decision"
+db_decisions_percentage = "percentage"
+db_decisions_reason = "reason"
+db_decisions_currency_code_balance = f"{currency_code.lower()}_balance"
+db_decisions_target_code_balance = f"{target_code.lower()}_balance"
+db_decisions_target_code_avg_buy_price = f"{target_code.lower()}_avg_buy_price"
+db_decisions_trade_code_price = f"{trade_code.lower()}_price"
+db_decisions_timestamp = "timestamp"
+
+db_decisions_NAME = "decisions"
+db_decisions_COLUMNS = [
+    db_decisions_decision,
+    db_decisions_percentage,
+    db_decisions_reason,
+    db_decisions_currency_code_balance,
+    db_decisions_target_code_balance,
+    db_decisions_target_code_avg_buy_price,
+    db_decisions_trade_code_price,
+    db_decisions_timestamp,
+]
+
+
+def InitializeDb():
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            f"""
+
+CREATE TABLE IF NOT EXISTS {db_decisions_NAME} (
+    {db_decisions_id} INTEGER PRIMARY KEY AUTOINCREMENT,
+    {db_decisions_decision} TEXT,
+    {db_decisions_percentage} REAL,
+    {db_decisions_reason} TEXT,
+    {db_decisions_currency_code_balance} REAL,
+    {db_decisions_target_code_balance} REAL,
+    {db_decisions_target_code_avg_buy_price} REAL,
+    {db_decisions_trade_code_price} REAL,
+    {db_decisions_timestamp} TEXT
+);
+
+            """
+        )
+        conn.commit()
+
+
+def SaveDecision(data):
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
+
+        # Preparing data for insertion
+        data_to_insert = (
+            data["response"]["decision"],
+            data["response"]["percentage"],
+            data["response"]["reason"],
+            data["wallet"][db_decisions_currency_code_balance],
+            data["wallet"][db_decisions_target_code_balance],
+            data["wallet"][db_decisions_target_code_avg_buy_price],
+            data["trade"][db_decisions_trade_code_price],
+            data["trade"]["timestamp"],
+        )
+
+        data_to_names = ",".join(db_decisions_COLUMNS)
+        data_to_column = ", ".join(["?" for _ in db_decisions_COLUMNS])
+
+        # Inserting data into the database
+        cursor.execute(
+            f"INSERT INTO {db_decisions_NAME} ({data_to_names}) VALUES ({data_to_column})",
+            data_to_insert,
+        )
+
+        conn.commit()
+
+
+def GetExpectTokenCount(text):
+    try:
+        encoding = tiktoken.encoding_for_model(MODEL_TOKENIZER_NAME)
+        return len(encoding.encode(text))
+    except:
+        encoding = tiktoken.encoding_for_model("gpt-4o-mini")
+        return len(encoding.encode(text))
+
+
+def Caching(ignore, applyDate, filename, lambda_func):
+
+    # 폴더 생성
+    dir = os.path.dirname(filename)
+    split = os.path.splitext(filename)
+    os.makedirs(dir, exist_ok=True)
+
+    # ignore가 True이면 캐싱을 무시하고 새로운 데이터를 가져옴
+    if not ignore:
+        if applyDate:
+            # 가장 최신 파일 찾기
+            files = glob.glob(f"{split[0]}-*{split[1]}")
+            latest_file = max(files, key=os.path.getctime) if files else None
+
+            if latest_file:
+                with open(latest_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        else:
+            # 정확한 파일명으로 찾기
+            if os.path.exists(filename) and not ignore:
+                with open(filename, "r", encoding="utf-8") as f:
+                    return json.load(f)
+
+    data = lambda_func()
+
+    # 파일명에 시간 추가
+    if applyDate:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S%f")[:-3]
+        actual_filename = f"{split[0]}-{timestamp}{split[1]}"
+    else:
+        actual_filename = filename
+
+    jsonData = json.dumps(ForceDump(data), ensure_ascii=False, indent=4)
+
+    # 새로운 데이터를 항상 파일로 저장
+    with open(actual_filename, "w", encoding="utf-8") as f:
+        f.write(jsonData)
+
+    return data
+
+
+def ApplyFormat(text):
+
+    def apply(text, key, value):
+        text = text.replace("{{{" + key.lower() + "}}}", value.lower())
+        text = text.replace("{{{" + key.upper() + "}}}", value.upper())
+        text = text.replace("{{{" + key.capitalize() + "}}}", value.capitalize())
+        return text
+
+    text = apply(text, "target_code", target_code)
+    text = apply(text, "currency_code", currency_code)
+    text = apply(text, "target_name", target_name)
+    text = apply(text, "currency_name", currency_name)
+    text = apply(text, "trade_code", trade_code)
+    text = apply(text, "limit_daily_count", str(limit_daily_count))
+    text = apply(text, "limit_hourly_count", str(limit_hourly_count))
+    text = apply(text, "limit_weekly_count", str(limit_weekly_count))
+    return text
+
+
+# endregion
 
 
 # region Collect Data Utils
@@ -92,6 +241,7 @@ def GetFearAndGreedIndex():
         return {
             "value": int(data["data"][0]["value"]),
             "classification": data["data"][0]["value_classification"],
+            "timestamp": data["data"][0]["timestamp"],
         }
     else:
         return None
@@ -106,7 +256,7 @@ def GetLatestNews():
     googlenews.set_period(f"{NEWS_REACH_DAYS}d")
     googlenews.set_encode("utf-8")
 
-    search_query = f"{target} {target_name} cryptocurrency"
+    search_query = f"{target_code} {target_name} cryptocurrency"
     googlenews.search(search_query)
 
     NEWS_LIMIT_LENGTH = int(os.getenv("NEWS_LIMIT_LENGTH", 3000))
@@ -132,87 +282,59 @@ def GetLatestNews():
             headlines.append(headline)
 
         page += 1
+        time.sleep(1)
 
     googlenews.clear()  # 결과를 지웁니다
 
     return headlines
 
 
-# 유튜브에서 최신 관련 영상을 찾아온다.
-# 찾아온 영상은 제목, 설명, 조회수, 좋아요, 구독자수, 캡션을 갖고있다.
 def GetLatestYoutube():
-
+    """
+    유튜브에서 최신 관련 영상을 찾아온다.
+    찾아온 영상은 제목, 설명, 조회수, 좋아요, 구독자수, 캡션을 갖고있다.
+    """
     ###############################################################
-    # 데이터 가져오기
-    if not UseCacheYoutube:
-        api_key = os.getenv("YOUTUBE_API_KEY")
-        youtube = build("youtube", "v3", developerKey=api_key)
 
-        # 현재 시간부터 1일 전의 날짜-시간을 구합니다
-        one_day_ago = (
-            datetime.datetime.now() - datetime.timedelta(days=1)
-        ).isoformat() + "Z"
+    api_key = os.getenv("YOUTUBE_API_KEY")
+    youtube = build("youtube", "v3", developerKey=api_key)
 
-        search_result = (
-            youtube.search()
-            .list(
-                q=f"{target_name} price prediction",
-                type="video",
-                publishedAfter=one_day_ago,
-                maxResults=10,
-                order="relevance",
-                videoCaption="closedCaption",
-                videoDuration="medium",
-                relevanceLanguage="en",
-                part="id,snippet",
-            )
-            .execute()
+    # 현재 시간부터 1일 전의 날짜-시간을 구합니다
+    one_day_ago = (datetime.datetime.now() - datetime.timedelta(days=1)).isoformat() + "Z"
+
+    search_result = (
+        youtube.search()
+        .list(
+            q=f"{target_name} price prediction",
+            type="video",
+            publishedAfter=one_day_ago,
+            maxResults=10,
+            order="relevance",
+            videoCaption="closedCaption",
+            videoDuration="medium",
+            relevanceLanguage="en",
+            part="id,snippet",
         )
+        .execute()
+    )
 
-        # 조회수, 좋아요, 채널구독수 추가
-        for item in search_result["items"]:
-            video_id = item["id"]["videoId"]
-            channel_id = item["snippet"]["channelId"]
+    # 조회수, 좋아요, 채널구독수 추가
+    for item in search_result["items"]:
+        video_id = item["id"]["videoId"]
+        channel_id = item["snippet"]["channelId"]
 
-            # 비디오 통계 가져오기
-            video_result = (
-                youtube.videos().list(part="statistics", id=video_id).execute()
-            )
+        # 비디오 통계 가져오기
+        video_result = youtube.videos().list(part="statistics", id=video_id).execute()
 
-            # 채널 통계 가져오기
-            channel_result = (
-                youtube.channels().list(part="statistics", id=channel_id).execute()
-            )
+        # 채널 통계 가져오기
+        channel_result = youtube.channels().list(part="statistics", id=channel_id).execute()
 
-            # 통계 정보 추가
-            item["statistics"] = {
-                "viewCount": video_result["items"][0]["statistics"]["viewCount"],
-                "likeCount": video_result["items"][0]["statistics"]["likeCount"],
-                "subscriberCount": channel_result["items"][0]["statistics"][
-                    "subscriberCount"
-                ],
-            }
-
-        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"cache/youtubelist_{now}.json"
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(search_result, f, ensure_ascii=False, indent=4)
-    else:
-        search_result = json.load(
-            open(
-                "cache/"
-                + max(
-                    [
-                        f
-                        for f in os.listdir("cache")
-                        if f.startswith("youtubelist_") and f.endswith(".json")
-                    ],
-                    key=lambda x: os.path.getctime(os.path.join("cache", x)),
-                ),
-                "r",
-                encoding="utf-8",
-            )
-        )
+        # 통계 정보 추가
+        item["statistics"] = {
+            "viewCount": video_result["items"][0]["statistics"]["viewCount"],
+            "likeCount": video_result["items"][0]["statistics"]["likeCount"],
+            "subscriberCount": channel_result["items"][0]["statistics"]["subscriberCount"],
+        }
 
     # 비디오가 1개라도 없는 상황 확인
     if not search_result.get("items") or len(search_result["items"]) == 0:
@@ -223,9 +345,7 @@ def GetLatestYoutube():
 
     # TARGET_KEYWORDS를 환경 변수에서 가져오기
     target_keywords = os.getenv("TARGET_KEYWORDS", "").strip()
-    keywords_list = [
-        keyword.strip() for keyword in target_keywords.split(",") if keyword.strip()
-    ]
+    keywords_list = [keyword.strip() for keyword in target_keywords.split(",") if keyword.strip()]
 
     # TARGET_KEYWORDS에 해당하는 영상만 필터링
     filtered_items = []
@@ -233,11 +353,7 @@ def GetLatestYoutube():
         title = item["snippet"]["title"]
         description = item["snippet"]["description"]
 
-        if any(
-            re.search(keyword, title, re.IGNORECASE)
-            or re.search(keyword, description, re.IGNORECASE)
-            for keyword in keywords_list
-        ):
+        if any(re.search(keyword, title, re.IGNORECASE) or re.search(keyword, description, re.IGNORECASE) for keyword in keywords_list):
             filtered_items.append(item)
 
     # 필터링된 영상이 1개 이상 있으면 search_response 업데이트
@@ -255,9 +371,7 @@ def GetLatestYoutube():
         subscriber_count = int(item["statistics"]["subscriberCount"])
         return view_count + (like_count * 5) + (subscriber_count * 10)
 
-    search_result["items"] = sorted(
-        search_result["items"], key=calculate_score, reverse=True
-    )
+    search_result["items"] = sorted(search_result["items"], key=calculate_score, reverse=True)
 
     ###############################################################
     # 캡션 가져오기
@@ -265,30 +379,20 @@ def GetLatestYoutube():
     captions = []
     for index, item in enumerate(search_result["items"]):
         video_id = item["id"]["videoId"]
-        filename = f"cache/video_{video_id}.json"
 
-        if os.path.exists(filename):
-            with open(filename, "r", encoding="utf-8") as f:
-                caption = json.load(f)
-        else:
-            try:
-                transcript = YouTubeTranscriptApi.get_transcript(video_id)
-                caption_text = " ".join([entry["text"] for entry in transcript])
-                caption = {
-                    "title": item["snippet"]["title"],
-                    "description": item["snippet"]["description"],
-                    "view_count": item["statistics"]["viewCount"],
-                    "like_count": item["statistics"]["likeCount"],
-                    "subscriber_count": item["statistics"]["subscriberCount"],
-                    "caption": caption_text,
-                }
+        caption_text = Caching(False, False, f"cache/video_{video_id}.json", lambda: GetVideoCaption(video_id))
 
-                with open(filename, "w", encoding="utf-8") as f:
-                    f.write(json.dumps(caption, ensure_ascii=False, indent=4))
+        if caption_text == None:
+            continue
 
-            except Exception as e:
-                caption = None
-                Log(f"[Youtube] Get Caption Error: {str(e)}")
+        caption = {
+            "title": item["snippet"]["title"],
+            "description": item["snippet"]["description"],
+            "view_count": item["statistics"]["viewCount"],
+            "like_count": item["statistics"]["likeCount"],
+            "subscriber_count": item["statistics"]["subscriberCount"],
+            "caption": caption_text,
+        }
 
         if caption and "caption" in caption and len(caption["caption"]) > 0:
             captions.append(caption)
@@ -296,11 +400,7 @@ def GetLatestYoutube():
     ###############################################################
     # 3000자를 넘는 캡션만 필터링
     minimum_caption_length = int(os.getenv("MINIMUM_CAPTION_LENGTH", 1000))
-    filtered_captions = [
-        caption
-        for caption in captions
-        if len(caption["caption"]) > minimum_caption_length
-    ]
+    filtered_captions = [caption for caption in captions if len(caption["caption"]) > minimum_caption_length]
 
     if not filtered_captions:
         return captions[0]
@@ -308,59 +408,130 @@ def GetLatestYoutube():
         return filtered_captions[0]
 
 
-def add_indicators(df):
-    # RSI
-    df["RSI"] = ta.momentum.RSIIndicator(df["close"]).rsi()
+def GetVideoCaption(video_id):
+    try:
+        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        caption_text = " ".join([entry["text"] for entry in transcript])
+        return caption_text
+    except Exception as e:
+        Log(f"[Youtube] GetCaption Error(videoid={video_id}, exception={str(e)})")
+        return None
 
-    # MACD
-    macd = ta.trend.MACD(df["close"])
-    df["MACD"] = macd.macd()
-    df["MACD_signal"] = macd.macd_signal()
-    df["MACD_diff"] = macd.macd_diff()
 
-    # Bollinger Bands
-    bollinger = ta.volatility.BollingerBands(df["close"])
-    df["BB_high"] = bollinger.bollinger_hband()
-    df["BB_low"] = bollinger.bollinger_lband()
-    df["BB_mid"] = bollinger.bollinger_mavg()
+def GetLastDecisions(num_decisions=10):
+    return []
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM trading_decisions ORDER BY id DESC LIMIT ?", (num_decisions,))
+    decisions = cursor.fetchall()
+    conn.close()
+    return decisions
 
-    # Stochastic Oscillator
-    stoch = ta.momentum.StochasticOscillator(df["high"], df["low"], df["close"])
-    df["Stoch_k"] = stoch.stoch()
-    df["Stoch_d"] = stoch.stoch_signal()
 
-    # 이동평균선 추가
-    # for period in [5, 10, 20, 60, 120]:
-    for period in [5, 10, 20]:
-        df[f"MA_{period}"] = ta.trend.SMAIndicator(
-            df["close"], window=period
-        ).sma_indicator()
+def GetChartData():
 
-    return df
+    # 시간봉
+    df_5min = pyupbit.get_ohlcv(trade_code, interval="minute5", count=limit_hourly_count)
+    df_hourly = pyupbit.get_ohlcv(trade_code, interval="minute60", count=limit_hourly_count)
+    df_daily = pyupbit.get_ohlcv(trade_code, interval="day", count=limit_daily_count)
+    df_weekly = pyupbit.get_ohlcv(trade_code, interval="week", count=limit_weekly_count)
+
+    # 지표 추가
+    def AddIndicators(df):
+        # RSI
+        df["RSI_14"] = ta.momentum.RSIIndicator(df["close"], window=14).rsi()
+
+        # MACD
+        macd = ta.trend.MACD(df["close"], window_slow=26, window_fast=12, window_sign=9)
+        df["MACD_12_26"] = macd.macd()
+        df["MACD_signal_9"] = macd.macd_signal()
+        df["MACD_diff_12_26_9"] = macd.macd_diff()
+
+        # Bollinger Bands
+        bollinger = ta.volatility.BollingerBands(df["close"], window=20, window_dev=2)
+        df["BB_high_20_2"] = bollinger.bollinger_hband()
+        df["BB_low_20_2"] = bollinger.bollinger_lband()
+        df["BB_mid_20"] = bollinger.bollinger_mavg()
+
+        # Stochastic Oscillator
+        stoch = ta.momentum.StochasticOscillator(df["high"], df["low"], df["close"], window=14, smooth_window=3)
+        df["Stoch_k_14_3"] = stoch.stoch()
+        df["Stoch_d_14_3"] = stoch.stoch_signal()
+
+        # 이동평균선 추가
+        # for period in [5, 10, 20, 60, 120]:
+        for period in [5, 10, 20]:
+            df[f"SMA_{period}"] = ta.trend.SMAIndicator(df["close"], window=period).sma_indicator()
+            df[f"EMA_{period}"] = ta.trend.EMAIndicator(df["close"], window=period).ema_indicator()
+
+        # ATR
+        df["ATR_14"] = ta.volatility.AverageTrueRange(df["high"], df["low"], df["close"], window=14).average_true_range()
+
+        # OBV
+        df["OBV"] = ta.volume.OnBalanceVolumeIndicator(df["close"], df["volume"]).on_balance_volume()
+
+        return df
+
+    df_5min = AddIndicators(df_5min)
+    df_hourly = AddIndicators(df_hourly)
+    df_daily = AddIndicators(df_daily)
+    df_weekly = AddIndicators(df_weekly)
+
+    combined_df = pd.concat(
+        [df_5min, df_hourly, df_daily, df_weekly],
+        keys=["5min", "hourly", "daily", "weekly"],
+    )
+    combined_data = combined_df.to_json(orient="split")
+
+    return combined_data
+
+
+def GetCurrentWallet():
+    balances = upbit.get_balances()
+    rst = {}
+
+    for b in balances:
+        if b["currency"].upper() == target_code.upper():
+            rst[db_decisions_target_code_balance] = b["balance"]
+            rst[db_decisions_target_code_avg_buy_price] = b["avg_buy_price"]
+        if b["currency"].upper() == currency_code.upper():
+            rst[db_decisions_currency_code_balance] = b["balance"]
+
+    Caching(True, True, "cache/wallet.json", lambda: {"source": balances, "result": rst})
+
+    return rst
+
+
+def GetInstruction(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            instructions = file.read()
+        return instructions
+    except FileNotFoundError:
+        print(f"File not found: '{file_path}'")
+    except Exception as e:
+        print("An error occurred while reading the file: '{file_path}'", e)
+
+
+def GetOrderbook():
+    orderbook = pyupbit.get_orderbook(trade_code)
+    return orderbook
 
 
 # endregion
 
 # region Logging Utils
 
-LogFileName = ""
-LogData = []
-
 
 def Log(name, data=None):
-    time = datetime.datetime.now(
-        datetime.timezone(datetime.timedelta(hours=9))
-    ).strftime("%Y-%m-%d %H:%M:%S.%f%z")[:-3]
+    time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%d %H:%M:%S.%f%z")[:-3]
 
     print(f"{time} {name}")
-
-    # 디렉토리가 없으면 생성
-    os.makedirs(os.path.dirname(LogFileName), exist_ok=True)
 
     # data를 JSON으로 저장 가능한 형태로 변환
     if data and not isinstance(data, (str, dict, list)):
         try:
-            data = json.loads(json.dumps(Dump(data)))
+            data = json.loads(json.dumps(ForceDump(data)))
         except:
             data = str(data)
 
@@ -376,7 +547,9 @@ def Log(name, data=None):
     json.dumps(LogData, indent=4, ensure_ascii=False)
 
 
-def Dump(data):
+def ForceDump(data) -> dict:
+    """객체까지 강제로 dictionary로 변경한다."""
+
     if isinstance(data, (int, float, str, bool, type(None))):
         return data
 
@@ -389,46 +562,42 @@ def Dump(data):
     if isinstance(data, dict):
         rst = {}
         for key, value in data.items():
-            rst[key] = Dump(value)
+            rst[key] = ForceDump(value)
     elif isinstance(data, list):
         rst = []
         for item in data:
-            rst.append(Dump(item))
+            rst.append(ForceDump(item))
     elif isinstance(data, Enum):
         rst = data.value
     elif hasattr(data, "__dict__"):
-        rst = Dump(data.__dict__)
+        rst = ForceDump(data.__dict__)
     else:
         rst = data
 
     return rst
 
 
+LogFileName = ""
+LogData = []
+
+
 def BeginLog():
+    global LogFileName, LogData
+
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     LogFileName = f"history/{now}.log"
     LogData = []
 
 
 def EndLog():
+    global LogFileName, LogData
+
+    # 디렉토리가 없으면 생성
+    os.makedirs(os.path.dirname(LogFileName), exist_ok=True)
 
     # 파일 열기 모드를 'a'로 변경하여 append 모드로 열기
     with open(LogFileName, "w", encoding="utf-8") as f:
         f.write(json.dumps(LogData, indent=4, ensure_ascii=False))  # 줄바꿈 추가
-
-
-# endregion
-
-# region Utils
-
-
-def count_tokens(text):
-    try:
-        encoding = tiktoken.encoding_for_model(MODEL_TOKENIZER_NAME)
-        return len(encoding.encode(text))
-    except:
-        encoding = tiktoken.encoding_for_model("gpt-4o-mini")
-        return len(encoding.encode(text))
 
 
 # endregion
@@ -441,9 +610,7 @@ class TradingDecisionEnum(str, Enum):
 
 
 class TradingDecision(BaseModel):
-    decision: TradingDecisionEnum = Field(
-        ..., description="The trading decision: 'buy', 'sell', or 'hold'"
-    )
+    decision: TradingDecisionEnum = Field(..., description="The trading decision: 'buy', 'sell', or 'hold'")
     reason: str = Field(..., description="Detailed reason for the trading decision")
     percentage: float = Field(
         ...,
@@ -451,144 +618,11 @@ class TradingDecision(BaseModel):
     )
 
 
-def Execute():
-
-    # 공포탐욕지수 가져오기
-    fngData = GetFearAndGreedIndex()
-    Log("[Upbit] Get Fear and Greed Index", fngData)
-
-    # 뉴스 헤드라인 가져오기
-    newsData = GetLatestNews()
-    Log("[Upbit] Get Google News", newsData)
-
-    # YouTube 캡션 가져오기
-    youtubeData = GetLatestYoutube()
-    Log("[Upbit] Get Youtube captions", youtubeData)
-
-    # 초기화하기
-    client = OpenAI()
-    Log("Create OpenAI Client")
-
-    upbit = pyupbit.Upbit(upbit_akey, upbit_skey)
-    Log("Create Upbit Client")
-
-    # 1. 업비트 차트데이터 가져오기
-    all_balances = upbit.get_balances()
-    filtered_balances = [
-        balance for balance in all_balances if balance["currency"] in [currency, target]
-    ]
-
-    # region Response Json
-    # {
-    #    "currency": "KRW",
-    #    "balance": "5452609.30591501",
-    #    "locked": "0",
-    #    "avg_buy_price": "0",
-    #    "avg_buy_price_modified": true,
-    #    "unit_currency": "KRW"
-    # }
-    # endregion
-    currency_balance = next(
-        (balance for balance in all_balances if balance["currency"] == currency), None
-    )
-
-    # region Response Json
-    # {
-    #    "currency": "ETH",
-    #    "balance": "0.00144258",
-    #    "locked": "0",
-    #    "avg_buy_price": "3466000",
-    #    "avg_buy_price_modified": false,
-    #    "unit_currency": "KRW"
-    # }
-    # endregion
-    target_balance = next(
-        (balance for balance in all_balances if balance["currency"] == target), None
-    )
-
-    Log("[Upbit] GetBalances", {currency: currency_balance, target: target_balance})
-
-    # 2. 오더북(호가 데이터) 조회
-    orderbook = pyupbit.get_orderbook(trade_code)
-    Log("[Upbit] Get Orderbook", orderbook)
-
-    # 시간봉
-    df_hourly = pyupbit.get_ohlcv(
-        trade_code, interval="minute60", count=limit_hourly_count
-    )
-    df_hourly = df_hourly.dropna()
-    df_hourly = add_indicators(df_hourly)
-    df_hourly = df_hourly.to_json()
-    Log("[Upbit] Get OHLCV Hourly", json.loads(df_hourly))
-
-    # 일봉
-    df_daily = pyupbit.get_ohlcv(trade_code, interval="day", count=limit_daily_count)
-    df_daily = df_daily.dropna()
-    df_daily = add_indicators(df_daily)
-    df_daily = df_daily.to_json()
-    Log("[Upbit] Get OHLCV Daily", json.loads(df_daily))
-
-    # 주봉 추가
-    df_weekly = pyupbit.get_ohlcv(trade_code, interval="week", count=limit_weekly_count)
-    df_weekly = df_weekly.dropna()
-    df_weekly = add_indicators(df_weekly)
-    df_weekly = df_weekly.to_json()
-    Log("[Upbit] Get OHLCV Weekly", json.loads(df_weekly))
-
-    # 2. AI에게 데이터 제공하고 판단 받기
-    systemMessage = f"""You are an expert in {target_name} investing. 
-Based on the provided chart data, news headlines, YouTube video information, and market indicators, please decide whether to buy, sell, or hold at the current moment.
-
-Please consider the following factors in your analysis:
-1. Technical indicators: 
-   - RSI (Relative Strength Index)
-   - MACD (Moving Average Convergence Divergence)
-   - Bollinger Bands
-   - Stochastic Oscillator
-   - Moving Averages (5-day, 10-day, 20-day)
-
-2. Fear and Greed Index: This index represents the current market sentiment.
-
-3. Latest news headlines: Consider the potential impact of recent news on the market.
-
-4. YouTube video information: Analyze the content of the most relevant recent video about {target_name} price prediction.
-
-5. Chart data:
-   - Hourly data: For short-term trend analysis
-   - Daily data: For medium-term trend analysis
-   - Weekly data: For long-term trend analysis
-
-6. Orderbook data: Use this to assess the current supply and demand situation in the market.
-
-7. Current balance: Consider the amount of {currency} and {target} currently held when making your decision.
-
-8. When making your decision, please consider short-term, medium-term, and long-term perspectives for a comprehensive judgment. Also, please provide a detailed explanation of the current market situation and future outlook.
-
-9. If you decide to buy or sell, please specify the percentage of {currency} to use for buying or {target} to sell. This should be based on your confidence in the decision and market conditions.
-
-Respond with:
-1. A decision (buy, sell, or hold)
-2. A detailed explanation of the current market situation and future outlook
-3. The percentage of '{currency}' to use for buying or '{target}' to sell (between 0 and 100)
-
-Important: Ensure that the percentage is a number between 0 and 100. Do not use percentages outside this range.
-Important: The percentage must be a number between 0 and 100. Do not use percentages outside this range."""
-    Log("[GPT] Create System Message", systemMessage)
-
-    userMessage = f"""Current investment status: {json.dumps(filtered_balances)}
-Oderbook: {json.dumps(orderbook)}
-Hourly OHLCV with indicators: {df_hourly}
-Daily OHLCV with indicators: {df_daily}
-Weekly OHLCV with indicators: {df_weekly}
-Fear and Greed Index: {json.dumps(fngData)}
-Latest News Headlines: {json.dumps(newsData)}
-YouTube Video Information: {json.dumps(youtubeData)}"""
-    Log("[GPT] Create User Message", userMessage)
-
-    responseFormat = {
+def GetTradingModelFormat():
+    return {
         "type": "json_schema",
         "json_schema": {
-            "name": TradingDecision.__name__,
+            "name": "TradingDecision",
             "strict": True,
             "schema": {
                 "type": "object",
@@ -613,52 +647,87 @@ YouTube Video Information: {json.dumps(youtubeData)}"""
         },
     }
 
-    messages = [
-        {
-            "role": "system",
-            "content": systemMessage,
-        },
-        {
-            "role": "user",
-            "content": userMessage,
-        },
-    ]
 
-    Log(
-        f"[GPT] Request GPT (Model:{MODEL_NAME}, Expect Tokens: {count_tokens(json.dumps(messages))})"
+def Execute():
+
+    # Db 초기화
+    InitializeDb()
+
+    # 데이터 가져오기
+    newsData = Caching(True, True, "cache/news.json", lambda: GetLatestNews())
+    Log("[Collect] GetLatestNews()", newsData)
+    youtubeData = Caching(True, True, "cache/youtube.json", lambda: GetLatestYoutube())
+    Log("[Collect] GetLatestYoutube()", youtubeData)
+    lastDecisions = GetLastDecisions()
+    Log("[Collect] GetLastDecisions()", lastDecisions)
+    fngData = GetFearAndGreedIndex()
+    Log("[Collect] GetFearAndGreedIndex()", fngData)
+    chartData = GetChartData()
+    Log("[Collect] GetChartData()", chartData)
+    orderbook = GetOrderbook()
+    Log("[Collect] GetOrderbook()", orderbook)
+    wallet = GetCurrentWallet()
+    wallet["timestamp"] = orderbook["timestamp"]
+    Log("[Collect] GetCurrentWallet()", wallet)
+
+    # 명령어 입력
+    messages = [
+        {"role": "system", "content": ApplyFormat(GetInstruction("Instruction.txt"))},
+        {"role": "user", "content": "Latest News: " + json.dumps(newsData, ensure_ascii=False)},
+        {"role": "user", "content": "Latest Youtube: " + json.dumps(youtubeData, ensure_ascii=False)},
+        {"role": "user", "content": "Current Charts: " + json.dumps(chartData, ensure_ascii=False)},
+        {"role": "user", "content": "Last Decisions: " + json.dumps(lastDecisions, ensure_ascii=False)},
+        {"role": "user", "content": "Fear and Greed Index: " + json.dumps(fngData, ensure_ascii=False)},
+        {"role": "user", "content": "Upbit Orderbook: " + json.dumps(orderbook, ensure_ascii=False)},
+        {"role": "user", "content": "My Wallet: " + json.dumps(wallet, ensure_ascii=False)},
+    ]
+    Log("[GPT] Make request messages.", messages)
+
+    Log(f"[GPT] Request GPT({MODEL_NAME}, ExpectTokens: {GetExpectTokenCount(json.dumps(messages)):,})")
+    response = Caching(
+        True,
+        True,
+        "cache/gpt.json",
+        lambda: client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=messages,
+            store=False,
+            response_format=GetTradingModelFormat(),
+            temperature=0.5,
+            max_tokens=2048,
+            top_p=1,
+            frequency_penalty=0.1,
+            presence_penalty=0.1,
+            n=10,
+        ),
     )
-    response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=messages,
-        temperature=1,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
-        response_format=responseFormat,
-    )
+    if isinstance(response, dict):
+        from openai.types.chat import ChatCompletion
+
+        response = ChatCompletion.model_validate(response)
 
     Log("[GPT] Response GPT", response)
-    Log(
-        "[GPT] Usage GPT (completion_tokens: {response.usage.completion_tokens}, prompt_tokens: {response.usage.prompt_tokens}, total_tokens: {response.usage.total_tokens})"
-    )
+    Log(f"[GPT] Completion_tokens: {response.usage.completion_tokens:,}")
+    Log(f"[GPT] Prompt_tokens: {response.usage.prompt_tokens:,}")
+    Log(f"[GPT] Total_tokens: {response.usage.total_tokens:,}")
 
-    result = json.loads(response.choices[0].message.content)
-    trading_decision = TradingDecision(**result)
+    trading_decision = TradingDecision(**json.loads(response.choices[0].message.content))
     Log("[GPT] Result", trading_decision)
 
     decision = trading_decision.decision
     reason = trading_decision.reason
     percentage = trading_decision.percentage
+    target_balance = wallet[f"{target_code.lower()}_balance"]
+    currency_balance = wallet[f"{currency_code.lower()}_balance"]
 
     # 3. AI의 판단에 따라 실제 매수매도하기
     if decision == "buy":
         # 매수
-        buy_amount = float(currency_balance["balance"]) * (percentage / 100)
+        buy_amount = float(currency_balance) * (percentage / 100)
         Log(f"[Upbit] Buy({buy_amount})")
     elif decision == "sell":
         # 매도
-        sell_amount = float(target_balance["balance"]) * (percentage / 100)
+        sell_amount = float(target_balance) * (percentage / 100)
         Log(f"[Upbit] Sell({sell_amount})")
     elif decision == "hold":
         # 지나감
