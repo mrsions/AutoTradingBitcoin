@@ -25,9 +25,6 @@
 
 # youtube 검색 시스템의 한계때문에 하루에 50번 이상 실행할 수 없다.
 # gpt-4o-mini의 경우 하루에 $0.15 를 사용한다.
-#
-
-# 카멜작명법을 사용한다.
 
 
 # 라이브러리 가져오기
@@ -53,6 +50,8 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Literal
 import tiktoken
+import logging
+from contextlib import contextmanager
 
 
 # Pandas 출력 옵션 설정
@@ -61,10 +60,15 @@ pd.set_option("display.max_columns", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
+# 로깅 설정
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+# API 키 관리 개선
 load_dotenv()
 upbit_akey = os.getenv("UPBIT_ACCESS_KEY")
 upbit_skey = os.getenv("UPBIT_SECRET_KEY")
 openai_key = os.getenv("OPENAI_API_KEY")
+youtube_api_key = os.getenv("YOUTUBE_API_KEY")
 currency_code = os.getenv("CURRENCY_CODE")  # KRW
 currency_name = os.getenv("CURRENCY_NAME")  # won
 target_code = os.getenv("TARGET_CODE")  # ETH
@@ -81,8 +85,6 @@ MODEL_TOKENIZER_NAME = "gpt-4o-mini"
 # 초기화하기
 client = OpenAI()
 upbit = pyupbit.Upbit(upbit_akey, upbit_skey)
-
-# region Utils
 
 db_decisions_id = "id"
 db_decisions_decision = "decision"
@@ -106,9 +108,21 @@ db_decisions_COLUMNS = [
     db_decisions_timestamp,
 ]
 
+# region db
 
-def InitializeDb():
-    with sqlite3.connect(db_path) as conn:
+
+# 데이터베이스 연결 최적화
+@contextmanager
+def get_db_connection():
+    conn = sqlite3.connect(db_path)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+def initialize_db():
+    with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
             f"""
@@ -125,13 +139,45 @@ CREATE TABLE IF NOT EXISTS {db_decisions_NAME} (
     {db_decisions_timestamp} TEXT
 );
 
+CREATE TABLE IF NOT EXISTS trades (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp TEXT,
+    ticker TEXT,
+    trade_type TEXT,
+    amount REAL,
+    price REAL,
+    total_price REAL
+)
             """
         )
         conn.commit()
 
 
-def SaveDecision(data):
-    with sqlite3.connect(db_path) as conn:
+def record_trade(ticker, trade_type, amount, price):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        total_price = amount * price
+        cursor.execute(
+            """
+        INSERT INTO trades (timestamp, ticker, trade_type, amount, price, total_price)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+            (timestamp, ticker, trade_type, amount, price, total_price),
+        )
+        conn.commit()
+
+
+def get_decisions(num_decisions=10):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM trading_decisions ORDER BY id DESC LIMIT ?", (num_decisions,))
+        decisions = cursor.fetchall()
+    return decisions
+
+
+def record_decision(data):
+    with get_db_connection() as conn:
         cursor = conn.cursor()
 
         # Preparing data for insertion
@@ -158,16 +204,23 @@ def SaveDecision(data):
         conn.commit()
 
 
-def GetExpectTokenCount(text):
+# endregion
+
+
+# region Utils
+
+
+def get_expect_token_count(text):
     try:
         encoding = tiktoken.encoding_for_model(MODEL_TOKENIZER_NAME)
         return len(encoding.encode(text))
-    except:
+    except ValueError:
+        logging.warning(f"Model {MODEL_TOKENIZER_NAME} not found. Using {MODEL_TOKENIZER_NAME} instead.")
         encoding = tiktoken.encoding_for_model("gpt-4o-mini")
         return len(encoding.encode(text))
 
 
-def Caching(ignore, applyDate, filename, lambda_func):
+def caching(ignore, applyDate, filename, lambda_func):
 
     # 폴더 생성
     dir = os.path.dirname(filename)
@@ -199,7 +252,7 @@ def Caching(ignore, applyDate, filename, lambda_func):
     else:
         actual_filename = filename
 
-    jsonData = json.dumps(ForceDump(data), ensure_ascii=False, indent=4)
+    jsonData = json.dumps(force_dumps(data), ensure_ascii=False, indent=4)
 
     # 새로운 데이터를 항상 파일로 저장
     with open(actual_filename, "w", encoding="utf-8") as f:
@@ -208,7 +261,7 @@ def Caching(ignore, applyDate, filename, lambda_func):
     return data
 
 
-def ApplyFormat(text):
+def replace_instruction_format(text):
 
     def apply(text, key, value):
         text = text.replace("{{{" + key.lower() + "}}}", value.lower())
@@ -233,7 +286,7 @@ def ApplyFormat(text):
 # region Collect Data Utils
 
 
-def GetFearAndGreedIndex():
+def get_fear_and_greed_index():
     url = "https://api.alternative.me/fng/"
     result = requests.get(url)
     if result.status_code == 200:
@@ -247,7 +300,7 @@ def GetFearAndGreedIndex():
         return None
 
 
-def GetLatestNews():
+def get_latest_news():
     from GoogleNews import GoogleNews
 
     NEWS_REACH_DAYS = os.getenv("NEWS_REACH_DAYS", "14")
@@ -289,15 +342,14 @@ def GetLatestNews():
     return headlines
 
 
-def GetLatestYoutube():
+def get_latest_youtube():
     """
     유튜브에서 최신 관련 영상을 찾아온다.
     찾아온 영상은 제목, 설명, 조회수, 좋아요, 구독자수, 캡션을 갖고있다.
     """
     ###############################################################
 
-    api_key = os.getenv("YOUTUBE_API_KEY")
-    youtube = build("youtube", "v3", developerKey=api_key)
+    youtube = build("youtube", "v3", developerKey=youtube_api_key)
 
     # 현재 시간부터 1일 전의 날짜-시간을 구합니다
     one_day_ago = (datetime.datetime.now() - datetime.timedelta(days=1)).isoformat() + "Z"
@@ -380,7 +432,7 @@ def GetLatestYoutube():
     for index, item in enumerate(search_result["items"]):
         video_id = item["id"]["videoId"]
 
-        caption_text = Caching(False, False, f"cache/video_{video_id}.json", lambda: GetVideoCaption(video_id))
+        caption_text = caching(False, False, f"cache/video_{video_id}.json", lambda: get_video_caption(video_id))
 
         if caption_text == None:
             continue
@@ -408,27 +460,17 @@ def GetLatestYoutube():
         return filtered_captions[0]
 
 
-def GetVideoCaption(video_id):
+def get_video_caption(video_id):
     try:
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
         caption_text = " ".join([entry["text"] for entry in transcript])
         return caption_text
     except Exception as e:
-        Log(f"[Youtube] GetCaption Error(videoid={video_id}, exception={str(e)})")
+        log(f"[Youtube] GetCaption Error(videoid={video_id}, exception={str(e)})")
         return None
 
 
-def GetLastDecisions(num_decisions=10):
-    return []
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM trading_decisions ORDER BY id DESC LIMIT ?", (num_decisions,))
-    decisions = cursor.fetchall()
-    conn.close()
-    return decisions
-
-
-def GetChartData():
+def get_chart_data():
 
     # 시간봉
     df_5min = pyupbit.get_ohlcv(trade_code, interval="minute5", count=limit_hourly_count)
@@ -486,7 +528,7 @@ def GetChartData():
     return combined_data
 
 
-def GetCurrentWallet():
+def get_current_wallet():
     balances = upbit.get_balances()
     rst = {}
 
@@ -497,12 +539,12 @@ def GetCurrentWallet():
         if b["currency"].upper() == currency_code.upper():
             rst[db_decisions_currency_code_balance] = b["balance"]
 
-    Caching(True, True, "cache/wallet.json", lambda: {"source": balances, "result": rst})
+    caching(True, True, "cache/wallet.json", lambda: {"source": balances, "result": rst})
 
     return rst
 
 
-def GetInstruction(file_path):
+def get_instruction(file_path):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             instructions = file.read()
@@ -513,7 +555,7 @@ def GetInstruction(file_path):
         print("An error occurred while reading the file: '{file_path}'", e)
 
 
-def GetOrderbook():
+def get_orderbook():
     orderbook = pyupbit.get_orderbook(trade_code)
     return orderbook
 
@@ -523,31 +565,25 @@ def GetOrderbook():
 # region Logging Utils
 
 
-def Log(name, data=None):
-    time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%d %H:%M:%S.%f%z")[:-3]
-
-    print(f"{time} {name}")
-
-    # data를 JSON으로 저장 가능한 형태로 변환
+def log(name, data=None):
     if data and not isinstance(data, (str, dict, list)):
         try:
-            data = json.loads(json.dumps(ForceDump(data)))
+            data = json.loads(json.dumps(force_dumps(data)))
         except:
             data = str(data)
 
+    logging.info(f"{name}: {data}")
+
     LogData.append(
         {
-            "time": time,
+            "time": datetime.datetime.now().isoformat(),
             "name": name,
             "data": data,
         }
     )
 
-    # dump test
-    json.dumps(LogData, indent=4, ensure_ascii=False)
 
-
-def ForceDump(data) -> dict:
+def force_dumps(data) -> dict:
     """객체까지 강제로 dictionary로 변경한다."""
 
     if isinstance(data, (int, float, str, bool, type(None))):
@@ -562,15 +598,15 @@ def ForceDump(data) -> dict:
     if isinstance(data, dict):
         rst = {}
         for key, value in data.items():
-            rst[key] = ForceDump(value)
+            rst[key] = force_dumps(value)
     elif isinstance(data, list):
         rst = []
         for item in data:
-            rst.append(ForceDump(item))
+            rst.append(force_dumps(item))
     elif isinstance(data, Enum):
         rst = data.value
     elif hasattr(data, "__dict__"):
-        rst = ForceDump(data.__dict__)
+        rst = force_dumps(data.__dict__)
     else:
         rst = data
 
@@ -581,7 +617,7 @@ LogFileName = ""
 LogData = []
 
 
-def BeginLog():
+def begin_log():
     global LogFileName, LogData
 
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -589,7 +625,7 @@ def BeginLog():
     LogData = []
 
 
-def EndLog():
+def end_log():
     global LogFileName, LogData
 
     # 디렉토리가 없으면 생성
@@ -618,7 +654,7 @@ class TradingDecision(BaseModel):
     )
 
 
-def GetTradingModelFormat():
+def get_trading_decision_model_format():
     return {
         "type": "json_schema",
         "json_schema": {
@@ -648,43 +684,88 @@ def GetTradingModelFormat():
     }
 
 
-def Execute():
+def execute_buy(ticker, amount):
+    try:
+        order = upbit.buy_market_order(ticker, amount)
+        if "error" in order:
+            log(f"[Upbit] Buy failed: {order['error']['message']}")
+            return False
 
+        time.sleep(1)  # API 요청 제한 고려
+        order_info = upbit.get_order(order["uuid"])
+
+        if order_info["state"] == "done":
+            executed_volume = float(order_info["executed_volume"])
+            trades = order_info["trades"]
+            if trades:
+                avg_price = sum(float(trade["price"]) * float(trade["volume"]) for trade in trades) / executed_volume
+                record_trade(ticker, "buy", executed_volume, avg_price)
+                log(f"[Upbit] Buy success: {ticker} {executed_volume} @ {avg_price}")
+                return True
+    except Exception as e:
+        log(f"[Upbit] Buy error: {str(e)}")
+    return False
+
+
+def execute_sell(ticker, amount):
+    try:
+        order = upbit.sell_market_order(ticker, amount)
+        if "error" in order:
+            log(f"[Upbit] Sell failed: {order['error']['message']}")
+            return False
+
+        time.sleep(1)  # API 요청 제한 고려
+        order_info = upbit.get_order(order["uuid"])
+
+        if order_info["state"] == "done":
+            executed_volume = float(order_info["executed_volume"])
+            trades = order_info["trades"]
+            if trades:
+                avg_price = sum(float(trade["price"]) * float(trade["volume"]) for trade in trades) / executed_volume
+                record_trade(ticker, "sell", executed_volume, avg_price)
+                log(f"[Upbit] Sell success: {ticker} {executed_volume} @ {avg_price}")
+                return True
+    except Exception as e:
+        log(f"[Upbit] Sell error: {str(e)}")
+    return False
+
+
+def execute_trading():
     # Db 초기화
-    InitializeDb()
+    initialize_db()
 
     # 데이터 가져오기
-    newsData = Caching(True, True, "cache/news.json", lambda: GetLatestNews())
-    Log("[Collect] GetLatestNews()", newsData)
-    youtubeData = Caching(True, True, "cache/youtube.json", lambda: GetLatestYoutube())
-    Log("[Collect] GetLatestYoutube()", youtubeData)
-    lastDecisions = GetLastDecisions()
-    Log("[Collect] GetLastDecisions()", lastDecisions)
-    fngData = GetFearAndGreedIndex()
-    Log("[Collect] GetFearAndGreedIndex()", fngData)
-    chartData = GetChartData()
-    Log("[Collect] GetChartData()", chartData)
-    orderbook = GetOrderbook()
-    Log("[Collect] GetOrderbook()", orderbook)
-    wallet = GetCurrentWallet()
+    newsData = caching(True, True, "cache/news.json", lambda: get_latest_news())
+    log("[Collect] GetLatestNews()", newsData)
+    youtubeData = caching(True, True, "cache/youtube.json", lambda: get_latest_youtube())
+    log("[Collect] GetLatestYoutube()", youtubeData)
+    lastDecisions = get_decisions()
+    log("[Collect] GetLastDecisions()", lastDecisions)
+    fngData = get_fear_and_greed_index()
+    log("[Collect] GetFearAndGreedIndex()", fngData)
+    chartData = get_chart_data()
+    log("[Collect] GetChartData()", chartData)
+    orderbook = get_orderbook()
+    log("[Collect] GetOrderbook()", orderbook)
+    wallet = get_current_wallet()
     wallet["timestamp"] = orderbook["timestamp"]
-    Log("[Collect] GetCurrentWallet()", wallet)
+    log("[Collect] GetCurrentWallet()", wallet)
 
     # 명령어 입력
     messages = [
-        {"role": "system", "content": ApplyFormat(GetInstruction("Instruction.txt"))},
-        {"role": "user", "content": "Latest News: " + json.dumps(newsData, ensure_ascii=False)},
-        {"role": "user", "content": "Latest Youtube: " + json.dumps(youtubeData, ensure_ascii=False)},
-        {"role": "user", "content": "Current Charts: " + json.dumps(chartData, ensure_ascii=False)},
-        {"role": "user", "content": "Last Decisions: " + json.dumps(lastDecisions, ensure_ascii=False)},
-        {"role": "user", "content": "Fear and Greed Index: " + json.dumps(fngData, ensure_ascii=False)},
-        {"role": "user", "content": "Upbit Orderbook: " + json.dumps(orderbook, ensure_ascii=False)},
-        {"role": "user", "content": "My Wallet: " + json.dumps(wallet, ensure_ascii=False)},
+        {"role": "system", "content": replace_instruction_format(get_instruction("Instruction.txt"))},
+        {"role": "user", "content": "Latest News: " + json.dumps(force_dumps(newsData), ensure_ascii=False)},
+        {"role": "user", "content": "Latest Youtube: " + json.dumps(force_dumps(youtubeData), ensure_ascii=False)},
+        {"role": "user", "content": "Current Charts: " + json.dumps(force_dumps(chartData), ensure_ascii=False)},
+        {"role": "user", "content": "Last Decisions: " + json.dumps(force_dumps(lastDecisions), ensure_ascii=False)},
+        {"role": "user", "content": "Fear and Greed Index: " + json.dumps(force_dumps(fngData), ensure_ascii=False)},
+        {"role": "user", "content": "Upbit Orderbook: " + json.dumps(force_dumps(orderbook), ensure_ascii=False)},
+        {"role": "user", "content": "My Wallet: " + json.dumps(force_dumps(wallet), ensure_ascii=False)},
     ]
-    Log("[GPT] Make request messages.", messages)
+    log("[GPT] Make request messages.", messages)
 
-    Log(f"[GPT] Request GPT({MODEL_NAME}, ExpectTokens: {GetExpectTokenCount(json.dumps(messages)):,})")
-    response = Caching(
+    log(f"[GPT] Request GPT({MODEL_NAME}, ExpectTokens: {get_expect_token_count(json.dumps(messages)):,})")
+    response = caching(
         True,
         True,
         "cache/gpt.json",
@@ -692,7 +773,7 @@ def Execute():
             model=MODEL_NAME,
             messages=messages,
             store=False,
-            response_format=GetTradingModelFormat(),
+            response_format=get_trading_decision_model_format(),
             temperature=0.5,
             max_tokens=2048,
             top_p=1,
@@ -706,13 +787,13 @@ def Execute():
 
         response = ChatCompletion.model_validate(response)
 
-    Log("[GPT] Response GPT", response)
-    Log(f"[GPT] Completion_tokens: {response.usage.completion_tokens:,}")
-    Log(f"[GPT] Prompt_tokens: {response.usage.prompt_tokens:,}")
-    Log(f"[GPT] Total_tokens: {response.usage.total_tokens:,}")
+    log(f"[GPT] Response GPT", response)
+    log(f"[GPT] Completion_tokens: {response.usage.completion_tokens:,}")
+    log(f"[GPT] Prompt_tokens: {response.usage.prompt_tokens:,}")
+    log(f"[GPT] Total_tokens: {response.usage.total_tokens:,}")
 
     trading_decision = TradingDecision(**json.loads(response.choices[0].message.content))
-    Log("[GPT] Result", trading_decision)
+    log("[GPT] Result", trading_decision)
 
     decision = trading_decision.decision
     reason = trading_decision.reason
@@ -724,24 +805,26 @@ def Execute():
     if decision == "buy":
         # 매수
         buy_amount = float(currency_balance) * (percentage / 100)
-        Log(f"[Upbit] Buy({buy_amount})")
+        if execute_buy(trade_code, buy_amount):
+            log(f"[Upbit] Buy completed: {trade_code}, {buy_amount}")
     elif decision == "sell":
         # 매도
         sell_amount = float(target_balance) * (percentage / 100)
-        Log(f"[Upbit] Sell({sell_amount})")
+        if execute_sell(trade_code, sell_amount):
+            log(f"[Upbit] Sell completed: {trade_code}, {sell_amount}")
     elif decision == "hold":
         # 지나감
-        Log(f"[Upbit] Hold")
+        log(f"[Upbit] Hold")
 
 
 while True:
 
     try:
-        BeginLog()
+        begin_log()
 
-        Execute()
+        execute_trading()
 
-        EndLog()
+        end_log()
 
         time.sleep(3600)
 
