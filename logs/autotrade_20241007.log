@@ -1,0 +1,1027 @@
+2024-10-07 15:47:35.270 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 15:47:36.609 - INFO - [AutoTrade] 프로그램이 종료 신호를 받았습니다.
+2024-10-07 15:47:36.610 - INFO - [AutoTrade] 시스템 종료 신호로 프로그램을 종료합니다.
+2024-10-07 15:47:36.610 - INFO - [AutoTrade] 프로그램이 정상적으로 종료되었습니다.
+2024-10-07 15:47:55.279 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 15:47:56.713 - INFO - [AutoTrade] 프로그램이 종료 신호를 받았습니다.
+2024-10-07 15:47:56.714 - INFO - [AutoTrade] 시스템 종료 신호로 프로그램을 종료합니다.
+2024-10-07 15:47:56.715 - INFO - [AutoTrade] 프로그램이 정상적으로 종료되었습니다.
+2024-10-07 16:05:42.452 - INFO - [Collect] get_latest_news()
+2024-10-07 16:05:42.467 - INFO - [Collect] get_decisions()
+2024-10-07 16:05:43.032 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:05:43.191 - INFO - [Collect] get_chart_data()
+2024-10-07 16:05:43.220 - INFO - [Collect] get_orderbook()
+2024-10-07 16:05:43.282 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:05:43.283 - INFO - [GPT] Make request messages.
+2024-10-07 16:05:43.464 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,483)
+2024-10-07 16:05:49.789 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:05:49.804 - INFO - [GPT] Response GPT
+2024-10-07 16:05:49.804 - INFO - [GPT] Completion_tokens: 153
+2024-10-07 16:05:49.804 - INFO - [GPT] Prompt_tokens: 44,512
+2024-10-07 16:05:49.805 - INFO - [GPT] Caching_tokens: 2,944
+2024-10-07 16:05:49.805 - INFO - [GPT] Total_tokens: 44,665
+2024-10-07 16:05:49.805 - INFO - [GPT] Model_pricing: $0.0065478
+2024-10-07 16:05:49.805 - INFO - [GPT] Result
+2024-10-07 16:05:49.805 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [1/5]
+2024-10-07 16:05:49.987 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%): failed(1/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:05:51.994 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [2/5]
+2024-10-07 16:05:52.167 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%): failed(2/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:05:54.171 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [3/5]
+2024-10-07 16:05:54.328 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%): failed(3/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:05:56.336 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [4/5]
+2024-10-07 16:05:56.482 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%): failed(4/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:05:58.497 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [5/5]
+2024-10-07 16:05:58.672 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%): failed(5/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:06:00.674 - ERROR - 'executed_volume'
+Traceback (most recent call last):
+  File "E:\AI\AutoTradingBitcoin\AutoTrade.py", line 1758, in execute_trading
+    executed_volume = trade["executed_volume"]
+KeyError: 'executed_volume'
+2024-10-07 16:06:00.722 - INFO - [Trade] Done
+2024-10-07 16:06:00.724 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:07:28.353 - INFO - [AutoTrade] 프로그램이 종료 신호를 받았습니다.
+2024-10-07 16:07:28.353 - INFO - [AutoTrade] 시스템 종료 신호로 프로그램을 종료합니다.
+2024-10-07 16:07:28.354 - INFO - [AutoTrade] 프로그램이 정상적으로 종료되었습니다.
+2024-10-07 16:12:23.742 - INFO - [Collect] get_latest_news()
+2024-10-07 16:12:23.742 - INFO - [Collect] get_decisions()
+2024-10-07 16:12:24.325 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:12:24.489 - INFO - [Collect] get_chart_data()
+2024-10-07 16:12:24.516 - INFO - [Collect] get_orderbook()
+2024-10-07 16:12:24.592 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:12:24.592 - INFO - [GPT] Make request messages.
+2024-10-07 16:12:24.755 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 42,401)
+2024-10-07 16:12:32.783 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:12:32.786 - INFO - [GPT] Response GPT
+2024-10-07 16:12:32.786 - INFO - [GPT] Completion_tokens: 111
+2024-10-07 16:12:32.786 - INFO - [GPT] Prompt_tokens: 41,460
+2024-10-07 16:12:32.787 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 16:12:32.787 - INFO - [GPT] Total_tokens: 41,571
+2024-10-07 16:12:32.787 - INFO - [GPT] Model_pricing: $0.0059304
+2024-10-07 16:12:32.787 - INFO - [GPT] Result
+2024-10-07 16:12:32.787 - ERROR - local variable 'order' referenced before assignment
+Traceback (most recent call last):
+  File "e:\AI\AutoTradingBitcoin\AutoTrade.py", line 1824, in <module>
+    execute_trading()
+  File "e:\AI\AutoTradingBitcoin\AutoTrade.py", line 1748, in execute_trading
+    trade = execute_buy(percentage)
+  File "e:\AI\AutoTradingBitcoin\AutoTrade.py", line 1041, in execute_buy
+    log(f"[Upbit] execute_buy({TRADE_CODE}, {percentage}%) [{attempt}/{BUY_MAX_ATTEMPTS}]", order)
+UnboundLocalError: local variable 'order' referenced before assignment
+2024-10-07 16:12:32.787 - INFO - [AutoTrade] Wait for 1 minutes.
+2024-10-07 16:13:30.469 - INFO - [Collect] get_latest_news()
+2024-10-07 16:13:30.470 - INFO - [Collect] get_decisions()
+2024-10-07 16:13:31.046 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:13:31.234 - INFO - [Collect] get_chart_data()
+2024-10-07 16:13:31.267 - INFO - [Collect] get_orderbook()
+2024-10-07 16:13:31.342 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:13:31.342 - INFO - [GPT] Make request messages.
+2024-10-07 16:13:31.509 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 42,401)
+2024-10-07 16:13:36.059 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:13:36.078 - INFO - [GPT] Response GPT
+2024-10-07 16:13:36.078 - INFO - [GPT] Completion_tokens: 111
+2024-10-07 16:13:36.079 - INFO - [GPT] Prompt_tokens: 41,460
+2024-10-07 16:13:36.079 - INFO - [GPT] Caching_tokens: 14,976
+2024-10-07 16:13:36.080 - INFO - [GPT] Total_tokens: 41,571
+2024-10-07 16:13:36.080 - INFO - [GPT] Model_pricing: $0.005162399999999999
+2024-10-07 16:13:36.081 - INFO - [GPT] Result
+2024-10-07 16:13:36.081 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 16:13:36.254 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85466000.0, executed_volume:0.3508677825711488, paid:70012734.0947742
+2024-10-07 16:13:36.255 - INFO - [Trade] Buy success (+0.3508677825711488 BTC, -70,012,734.0947742 KRW)
+2024-10-07 16:13:36.261 - INFO - [Trade] Done
+2024-10-07 16:13:36.263 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:15:09.073 - INFO - [Collect] get_latest_news()
+2024-10-07 16:15:09.074 - INFO - [Collect] get_decisions()
+2024-10-07 16:15:09.651 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:15:09.823 - INFO - [Collect] get_chart_data()
+2024-10-07 16:15:09.859 - INFO - [Collect] get_orderbook()
+2024-10-07 16:15:09.943 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:15:09.943 - INFO - [GPT] Make request messages.
+2024-10-07 16:15:10.111 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 42,740)
+2024-10-07 16:15:15.896 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:15:15.900 - INFO - [GPT] Response GPT
+2024-10-07 16:15:15.900 - INFO - [GPT] Completion_tokens: 140
+2024-10-07 16:15:15.901 - INFO - [GPT] Prompt_tokens: 41,795
+2024-10-07 16:15:15.901 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 16:15:15.901 - INFO - [GPT] Total_tokens: 41,935
+2024-10-07 16:15:15.901 - INFO - [GPT] Model_pricing: $0.0059980499999999996
+2024-10-07 16:15:15.901 - INFO - [GPT] Result
+2024-10-07 16:15:15.902 - INFO - [Upbit] execute_sell(KRW-BTC, 10%) [1/5]
+2024-10-07 16:15:16.116 - INFO - [Upbit] execute_sell(KRW-BTC, 10%), price:85457000.0, executed_volume:0.0350690683775842, received:2995398.927655041
+2024-10-07 16:15:16.116 - INFO - [Trade] Sell success (-0.0350690683775842 BTC, +2,995,398.927655041 KRW)
+2024-10-07 16:15:16.126 - INFO - [Trade] Done
+2024-10-07 16:15:16.129 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:15:30.109 - INFO - [Collect] get_latest_news()
+2024-10-07 16:15:30.110 - INFO - [Collect] get_decisions()
+2024-10-07 16:15:30.690 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:15:30.876 - INFO - [Collect] get_chart_data()
+2024-10-07 16:15:30.909 - INFO - [Collect] get_orderbook()
+2024-10-07 16:15:30.973 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:15:30.974 - INFO - [GPT] Make request messages.
+2024-10-07 16:15:31.139 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 43,084)
+2024-10-07 16:15:37.392 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:15:37.399 - INFO - [GPT] Response GPT
+2024-10-07 16:15:37.399 - INFO - [GPT] Completion_tokens: 138
+2024-10-07 16:15:37.399 - INFO - [GPT] Prompt_tokens: 42,136
+2024-10-07 16:15:37.400 - INFO - [GPT] Caching_tokens: 14,976
+2024-10-07 16:15:37.400 - INFO - [GPT] Total_tokens: 42,274
+2024-10-07 16:15:37.400 - INFO - [GPT] Model_pricing: $0.00528
+2024-10-07 16:15:37.400 - INFO - [GPT] Result
+2024-10-07 16:15:37.400 - INFO - [Upbit] execute_buy(KRW-BTC, 10%) [1/5]
+2024-10-07 16:15:37.586 - INFO - [Upbit] execute_buy(KRW-BTC, 10%): price=85455000.0, executed_volume:0.08537439936960141, paid:65697470.09134734
+2024-10-07 16:15:37.587 - INFO - [Trade] Buy success (+0.08537439936960141 BTC, -65,697,470.09134734 KRW)
+2024-10-07 16:15:37.598 - INFO - [Trade] Done
+2024-10-07 16:15:37.603 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:17:20.934 - INFO - [Collect] get_latest_news()
+2024-10-07 16:17:20.935 - INFO - [Collect] get_decisions()
+2024-10-07 16:17:21.496 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:17:21.661 - INFO - [Collect] get_chart_data()
+2024-10-07 16:17:21.689 - INFO - [Collect] get_orderbook()
+2024-10-07 16:17:21.784 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:17:21.784 - INFO - [GPT] Make request messages.
+2024-10-07 16:17:22.014 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 43,420)
+2024-10-07 16:17:29.325 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:17:29.343 - INFO - [GPT] Response GPT
+2024-10-07 16:17:29.343 - INFO - [GPT] Completion_tokens: 159
+2024-10-07 16:17:29.343 - INFO - [GPT] Prompt_tokens: 42,469
+2024-10-07 16:17:29.343 - INFO - [GPT] Caching_tokens: 14,976
+2024-10-07 16:17:29.344 - INFO - [GPT] Total_tokens: 42,628
+2024-10-07 16:17:29.344 - INFO - [GPT] Model_pricing: $0.00534255
+2024-10-07 16:17:29.344 - INFO - [GPT] Result
+2024-10-07 16:17:29.344 - INFO - [Upbit] execute_buy(KRW-BTC, 0.1%) [1/5]
+2024-10-07 16:17:29.464 - INFO - [Upbit] execute_buy(KRW-BTC, 0.1%) [1/5] Ordered
+2024-10-07 16:17:30.525 - INFO - [Upbit] execute_buy(KRW-BTC, 0.1%) Validate
+2024-10-07 16:17:30.593 - INFO - [Upbit] execute_buy(KRW-BTC, 0.1%): price=85415000.0, executed_volume:8.693e-05, paid:7428.8385129749995
+2024-10-07 16:17:30.593 - INFO - [Trade] Buy success (+8.693e-05 BTC, -7,428.8385129749995 KRW)
+2024-10-07 16:17:30.598 - INFO - [Trade] Done
+2024-10-07 16:17:30.600 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:18:16.999 - INFO - [Collect] get_latest_news()
+2024-10-07 16:18:17.000 - INFO - [Collect] get_decisions()
+2024-10-07 16:18:17.571 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:18:17.732 - INFO - [Collect] get_chart_data()
+2024-10-07 16:18:17.763 - INFO - [Collect] get_orderbook()
+2024-10-07 16:18:17.835 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:18:17.836 - INFO - [GPT] Make request messages.
+2024-10-07 16:18:17.998 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 43,768)
+2024-10-07 16:18:25.193 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:18:25.202 - INFO - [GPT] Response GPT
+2024-10-07 16:18:25.202 - INFO - [GPT] Completion_tokens: 175
+2024-10-07 16:18:25.203 - INFO - [GPT] Prompt_tokens: 42,814
+2024-10-07 16:18:25.203 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 16:18:25.203 - INFO - [GPT] Total_tokens: 42,989
+2024-10-07 16:18:25.204 - INFO - [GPT] Model_pricing: $0.006527099999999999
+2024-10-07 16:18:25.204 - INFO - [GPT] Result
+2024-10-07 16:18:25.204 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%) [1/5]
+2024-10-07 16:18:25.368 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%): failed(1/5): local variable 'order_info' referenced before assignment
+2024-10-07 16:18:25.368 - ERROR - local variable 'order_info' referenced before assignment
+Traceback (most recent call last):
+  File "e:\AI\AutoTradingBitcoin\AutoTrade.py", line 1299, in execute_sell
+    safe_save_or_load(True, "all", "cache/upbits/sell.json", order_info)
+UnboundLocalError: local variable 'order_info' referenced before assignment
+2024-10-07 16:20:47.915 - INFO - [Collect] get_latest_news()
+2024-10-07 16:20:47.916 - INFO - [Collect] get_decisions()
+2024-10-07 16:20:48.488 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:20:48.662 - INFO - [Collect] get_chart_data()
+2024-10-07 16:20:48.693 - INFO - [Collect] get_orderbook()
+2024-10-07 16:20:48.776 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:20:48.777 - INFO - [GPT] Make request messages.
+2024-10-07 16:20:48.941 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 43,766)
+2024-10-07 16:20:55.693 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:20:55.697 - INFO - [GPT] Response GPT
+2024-10-07 16:20:55.697 - INFO - [GPT] Completion_tokens: 156
+2024-10-07 16:20:55.698 - INFO - [GPT] Prompt_tokens: 42,812
+2024-10-07 16:20:55.698 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 16:20:55.698 - INFO - [GPT] Total_tokens: 42,968
+2024-10-07 16:20:55.698 - INFO - [GPT] Model_pricing: $0.0065154
+2024-10-07 16:20:55.698 - INFO - [GPT] Result
+2024-10-07 16:20:55.698 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%) [1/5]
+2024-10-07 16:20:55.892 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%) [1/5] Ordered
+2024-10-07 16:20:56.963 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%) [1/5] Validate
+2024-10-07 16:20:57.037 - INFO - [Upbit] execute_sell(KRW-BTC, 0.5%), price:85347000.0, executed_volume:6.624e-05, received:5650.55858736
+2024-10-07 16:20:57.037 - INFO - [Trade] Sell success (-6.624e-05 BTC, +5,650.55858736 KRW)
+2024-10-07 16:20:57.043 - INFO - [Trade] Done
+2024-10-07 16:20:57.044 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:21:00.156 - INFO - [AutoTrade] 프로그램이 종료 신호를 받았습니다.
+2024-10-07 16:21:00.157 - INFO - [AutoTrade] 시스템 종료 신호로 프로그램을 종료합니다.
+2024-10-07 16:21:00.158 - INFO - [AutoTrade] 프로그램이 정상적으로 종료되었습니다.
+2024-10-07 16:25:44.341 - INFO - [Collect] get_latest_news()
+2024-10-07 16:25:44.342 - INFO - [Collect] get_decisions()
+2024-10-07 16:25:44.933 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:25:45.104 - INFO - [Collect] get_chart_data()
+2024-10-07 16:25:45.137 - INFO - [Collect] get_orderbook()
+2024-10-07 16:25:45.220 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:25:45.221 - INFO - [GPT] Make request messages.
+2024-10-07 16:25:45.384 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,132)
+2024-10-07 16:25:51.944 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:25:51.954 - INFO - [GPT] Response GPT
+2024-10-07 16:25:51.954 - INFO - [GPT] Completion_tokens: 166
+2024-10-07 16:25:51.955 - INFO - [GPT] Prompt_tokens: 43,175
+2024-10-07 16:25:51.955 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 16:25:51.955 - INFO - [GPT] Total_tokens: 43,341
+2024-10-07 16:25:51.955 - INFO - [GPT] Model_pricing: $0.006575849999999999
+2024-10-07 16:25:51.955 - INFO - [GPT] Result
+2024-10-07 16:25:51.956 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [1/5]
+2024-10-07 16:25:52.147 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 16:25:53.220 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%) [1/5] Validate
+2024-10-07 16:25:53.287 - INFO - [Upbit] execute_sell(KRW-BTC, 30.0%), price:85300592.87776951, executed_volume:0.00395466, received:337166.175208685
+2024-10-07 16:25:53.288 - INFO - [Trade] Sell success (-0.00395466 BTC, +337,166.175208685 KRW)
+2024-10-07 16:25:53.297 - INFO - [Trade] Done
+2024-10-07 16:25:53.301 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:35:53.318 - INFO - [Collect] get_latest_news()
+2024-10-07 16:35:53.320 - INFO - [Collect] get_decisions()
+2024-10-07 16:35:53.932 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:35:54.098 - INFO - [Collect] get_chart_data()
+2024-10-07 16:35:54.127 - INFO - [Collect] get_orderbook()
+2024-10-07 16:35:54.210 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:35:54.212 - INFO - [GPT] Make request messages.
+2024-10-07 16:35:54.228 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,474)
+2024-10-07 16:36:00.809 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:36:00.821 - INFO - [GPT] Response GPT
+2024-10-07 16:36:00.822 - INFO - [GPT] Completion_tokens: 171
+2024-10-07 16:36:00.822 - INFO - [GPT] Prompt_tokens: 43,514
+2024-10-07 16:36:00.822 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 16:36:00.823 - INFO - [GPT] Total_tokens: 43,685
+2024-10-07 16:36:00.823 - INFO - [GPT] Model_pricing: $0.006629699999999999
+2024-10-07 16:36:00.823 - INFO - [GPT] Result
+2024-10-07 16:36:00.823 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 16:36:00.959 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 16:36:02.024 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 16:36:02.093 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85332994.71340697, executed_volume:0.02730492, paid:2331175.5993070053
+2024-10-07 16:36:02.093 - INFO - [Trade] Buy success (+0.02730492 BTC, -2,331,175.5993070053 KRW)
+2024-10-07 16:36:02.102 - INFO - [Trade] Done
+2024-10-07 16:36:02.103 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:46:02.118 - INFO - [Collect] get_latest_news()
+2024-10-07 16:46:02.125 - INFO - [Collect] get_decisions()
+2024-10-07 16:46:02.697 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:46:02.900 - INFO - [Collect] get_chart_data()
+2024-10-07 16:46:02.927 - INFO - [Collect] get_orderbook()
+2024-10-07 16:46:03.009 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:46:03.011 - INFO - [GPT] Make request messages.
+2024-10-07 16:46:03.029 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,858)
+2024-10-07 16:46:10.116 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:46:10.121 - INFO - [GPT] Response GPT
+2024-10-07 16:46:10.122 - INFO - [GPT] Completion_tokens: 169
+2024-10-07 16:46:10.122 - INFO - [GPT] Prompt_tokens: 43,895
+2024-10-07 16:46:10.123 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 16:46:10.123 - INFO - [GPT] Total_tokens: 44,064
+2024-10-07 16:46:10.123 - INFO - [GPT] Model_pricing: $0.00633045
+2024-10-07 16:46:10.124 - INFO - [GPT] Result
+2024-10-07 16:46:10.124 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 16:46:10.258 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 16:46:11.316 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 16:46:11.392 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85284000.0, executed_volume:0.01912447, paid:1631826.8051297402
+2024-10-07 16:46:11.392 - INFO - [Trade] Buy success (+0.01912447 BTC, -1,631,826.8051297402 KRW)
+2024-10-07 16:46:11.399 - INFO - [Trade] Done
+2024-10-07 16:46:11.401 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 16:56:11.408 - INFO - [Collect] get_latest_news()
+2024-10-07 16:56:11.416 - INFO - [Collect] get_decisions()
+2024-10-07 16:56:11.995 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 16:56:12.172 - INFO - [Collect] get_chart_data()
+2024-10-07 16:56:12.200 - INFO - [Collect] get_orderbook()
+2024-10-07 16:56:12.286 - INFO - [Collect] get_current_wallet()
+2024-10-07 16:56:12.289 - INFO - [GPT] Make request messages.
+2024-10-07 16:56:12.305 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,196)
+2024-10-07 16:56:23.706 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 16:56:23.711 - INFO - [GPT] Response GPT
+2024-10-07 16:56:23.712 - INFO - [GPT] Completion_tokens: 181
+2024-10-07 16:56:23.712 - INFO - [GPT] Prompt_tokens: 44,230
+2024-10-07 16:56:23.712 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 16:56:23.713 - INFO - [GPT] Total_tokens: 44,411
+2024-10-07 16:56:23.713 - INFO - [GPT] Model_pricing: $0.0063879
+2024-10-07 16:56:23.713 - INFO - [GPT] Result
+2024-10-07 16:56:23.713 - INFO - [Upbit] execute_buy(KRW-BTC, 40.0%) [1/5]
+2024-10-07 16:56:23.866 - INFO - [Upbit] execute_buy(KRW-BTC, 40.0%) [1/5] Ordered
+2024-10-07 16:56:24.927 - INFO - [Upbit] execute_buy(KRW-BTC, 40.0%) Validate
+2024-10-07 16:56:25.002 - INFO - [Upbit] execute_buy(KRW-BTC, 40.0%): price=85387000.0, executed_volume:0.01782801, paid:1523041.430014935
+2024-10-07 16:56:25.002 - INFO - [Trade] Buy success (+0.01782801 BTC, -1,523,041.430014935 KRW)
+2024-10-07 16:56:25.014 - INFO - [Trade] Done
+2024-10-07 16:56:25.018 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:06:35.009 - INFO - [Collect] get_latest_news()
+2024-10-07 17:06:35.016 - INFO - [Collect] get_decisions()
+2024-10-07 17:06:35.621 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:06:35.805 - INFO - [Collect] get_chart_data()
+2024-10-07 17:06:35.835 - INFO - [Collect] get_orderbook()
+2024-10-07 17:06:35.896 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:06:35.897 - INFO - [GPT] Make request messages.
+2024-10-07 17:06:35.911 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,557)
+2024-10-07 17:06:42.789 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:06:42.793 - INFO - [GPT] Response GPT
+2024-10-07 17:06:42.794 - INFO - [GPT] Completion_tokens: 167
+2024-10-07 17:06:42.794 - INFO - [GPT] Prompt_tokens: 44,588
+2024-10-07 17:06:42.794 - INFO - [GPT] Caching_tokens: 2,944
+2024-10-07 17:06:42.795 - INFO - [GPT] Total_tokens: 44,755
+2024-10-07 17:06:42.795 - INFO - [GPT] Model_pricing: $0.0065676
+2024-10-07 17:06:42.795 - INFO - [GPT] Result
+2024-10-07 17:06:42.795 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:06:42.954 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:06:44.025 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:06:44.114 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85507000.0, executed_volume:0.00801137, paid:685370.728697295
+2024-10-07 17:06:44.114 - INFO - [Trade] Buy success (+0.00801137 BTC, -685,370.728697295 KRW)
+2024-10-07 17:06:44.126 - INFO - [Trade] Done
+2024-10-07 17:06:44.130 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:16:44.137 - INFO - [Collect] get_latest_news()
+2024-10-07 17:16:44.148 - INFO - [Collect] get_decisions()
+2024-10-07 17:16:44.720 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:16:44.911 - INFO - [Collect] get_chart_data()
+2024-10-07 17:16:44.944 - INFO - [Collect] get_orderbook()
+2024-10-07 17:16:45.028 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:16:45.031 - INFO - [GPT] Make request messages.
+2024-10-07 17:16:45.047 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,927)
+2024-10-07 17:16:52.279 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:16:52.281 - INFO - [GPT] Response GPT
+2024-10-07 17:16:52.281 - INFO - [GPT] Completion_tokens: 180
+2024-10-07 17:16:52.281 - INFO - [GPT] Prompt_tokens: 44,955
+2024-10-07 17:16:52.281 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 17:16:52.281 - INFO - [GPT] Total_tokens: 45,135
+2024-10-07 17:16:52.281 - INFO - [GPT] Model_pricing: $0.006496049999999999
+2024-10-07 17:16:52.282 - INFO - [GPT] Result
+2024-10-07 17:16:52.282 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:16:52.449 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:16:53.507 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:16:53.580 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85451000.0, executed_volume:0.00561165, paid:479760.864702075
+2024-10-07 17:16:53.580 - INFO - [Trade] Buy success (+0.00561165 BTC, -479,760.864702075 KRW)
+2024-10-07 17:16:53.591 - INFO - [Trade] Done
+2024-10-07 17:16:53.595 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:26:53.606 - INFO - [Collect] get_latest_news()
+2024-10-07 17:26:53.608 - INFO - [Collect] get_decisions()
+2024-10-07 17:26:54.187 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:26:54.357 - INFO - [Collect] get_chart_data()
+2024-10-07 17:26:54.395 - INFO - [Collect] get_orderbook()
+2024-10-07 17:26:54.473 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:26:54.477 - INFO - [GPT] Make request messages.
+2024-10-07 17:26:54.495 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,001)
+2024-10-07 17:27:02.704 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:27:02.705 - INFO - [GPT] Response GPT
+2024-10-07 17:27:02.705 - INFO - [GPT] Completion_tokens: 176
+2024-10-07 17:27:02.705 - INFO - [GPT] Prompt_tokens: 45,029
+2024-10-07 17:27:02.705 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 17:27:02.707 - INFO - [GPT] Total_tokens: 45,205
+2024-10-07 17:27:02.707 - INFO - [GPT] Model_pricing: $0.00650475
+2024-10-07 17:27:02.707 - INFO - [GPT] Result
+2024-10-07 17:27:02.707 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:27:02.854 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:27:03.922 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:27:03.999 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85421000.0, executed_volume:0.00392954, paid:335833.06895817
+2024-10-07 17:27:04.000 - INFO - [Trade] Buy success (+0.00392954 BTC, -335,833.06895817 KRW)
+2024-10-07 17:27:04.010 - INFO - [Trade] Done
+2024-10-07 17:27:04.015 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:37:04.032 - INFO - [Collect] get_latest_news()
+2024-10-07 17:37:04.047 - INFO - [Collect] get_decisions()
+2024-10-07 17:37:04.671 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:37:04.850 - INFO - [Collect] get_chart_data()
+2024-10-07 17:37:04.876 - INFO - [Collect] get_orderbook()
+2024-10-07 17:37:04.956 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:37:04.958 - INFO - [GPT] Make request messages.
+2024-10-07 17:37:04.975 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,023)
+2024-10-07 17:37:11.732 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:37:11.737 - INFO - [GPT] Response GPT
+2024-10-07 17:37:11.737 - INFO - [GPT] Completion_tokens: 175
+2024-10-07 17:37:11.738 - INFO - [GPT] Prompt_tokens: 45,051
+2024-10-07 17:37:11.738 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 17:37:11.738 - INFO - [GPT] Total_tokens: 45,226
+2024-10-07 17:37:11.738 - INFO - [GPT] Model_pricing: $0.00650745
+2024-10-07 17:37:11.739 - INFO - [GPT] Result
+2024-10-07 17:37:11.739 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:37:11.887 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:37:12.950 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:37:13.031 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85496727.43018284, executed_volume:0.00274825, paid:235083.86435058
+2024-10-07 17:37:13.031 - INFO - [Trade] Buy success (+0.00274825 BTC, -235,083.86435058 KRW)
+2024-10-07 17:37:13.039 - INFO - [Trade] Done
+2024-10-07 17:37:13.043 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:47:13.056 - INFO - [Collect] get_latest_news()
+2024-10-07 17:47:13.065 - INFO - [Collect] get_decisions()
+2024-10-07 17:47:13.654 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:47:13.824 - INFO - [Collect] get_chart_data()
+2024-10-07 17:47:13.853 - INFO - [Collect] get_orderbook()
+2024-10-07 17:47:13.938 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:47:13.943 - INFO - [GPT] Make request messages.
+2024-10-07 17:47:13.961 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,030)
+2024-10-07 17:47:22.392 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:47:22.397 - INFO - [GPT] Response GPT
+2024-10-07 17:47:22.397 - INFO - [GPT] Completion_tokens: 189
+2024-10-07 17:47:22.397 - INFO - [GPT] Prompt_tokens: 45,058
+2024-10-07 17:47:22.397 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 17:47:22.397 - INFO - [GPT] Total_tokens: 45,247
+2024-10-07 17:47:22.397 - INFO - [GPT] Model_pricing: $0.0068721
+2024-10-07 17:47:22.398 - INFO - [GPT] Result
+2024-10-07 17:47:22.398 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:47:22.527 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:47:23.591 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:47:23.666 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85417000.0, executed_volume:0.00192557, paid:164558.650896345
+2024-10-07 17:47:23.666 - INFO - [Trade] Buy success (+0.00192557 BTC, -164,558.650896345 KRW)
+2024-10-07 17:47:23.672 - INFO - [Trade] Done
+2024-10-07 17:47:23.674 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 17:57:23.681 - INFO - [Collect] get_latest_news()
+2024-10-07 17:57:23.694 - INFO - [Collect] get_decisions()
+2024-10-07 17:57:24.266 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 17:57:24.461 - INFO - [Collect] get_chart_data()
+2024-10-07 17:57:24.496 - INFO - [Collect] get_orderbook()
+2024-10-07 17:57:24.581 - INFO - [Collect] get_current_wallet()
+2024-10-07 17:57:24.585 - INFO - [GPT] Make request messages.
+2024-10-07 17:57:24.603 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,077)
+2024-10-07 17:57:39.869 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 17:57:39.881 - INFO - [GPT] Response GPT
+2024-10-07 17:57:39.881 - INFO - [GPT] Completion_tokens: 174
+2024-10-07 17:57:39.882 - INFO - [GPT] Prompt_tokens: 45,105
+2024-10-07 17:57:39.882 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 17:57:39.883 - INFO - [GPT] Total_tokens: 45,279
+2024-10-07 17:57:39.883 - INFO - [GPT] Model_pricing: $0.00651495
+2024-10-07 17:57:39.883 - INFO - [GPT] Result
+2024-10-07 17:57:39.884 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 17:57:40.062 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 17:57:41.129 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 17:57:41.211 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85428000.0, executed_volume:0.00134773, paid:115191.44537922001
+2024-10-07 17:57:41.212 - INFO - [Trade] Buy success (+0.00134773 BTC, -115,191.44537922001 KRW)
+2024-10-07 17:57:41.217 - INFO - [Trade] Done
+2024-10-07 17:57:41.219 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:07:50.163 - INFO - [Collect] get_latest_news()
+2024-10-07 18:07:50.173 - INFO - [Collect] get_decisions()
+2024-10-07 18:07:50.755 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:07:50.964 - INFO - [Collect] get_chart_data()
+2024-10-07 18:07:50.999 - INFO - [Collect] get_orderbook()
+2024-10-07 18:07:51.072 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:07:51.073 - INFO - [GPT] Make request messages.
+2024-10-07 18:07:51.087 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,091)
+2024-10-07 18:07:59.555 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:07:59.567 - INFO - [GPT] Response GPT
+2024-10-07 18:07:59.567 - INFO - [GPT] Completion_tokens: 188
+2024-10-07 18:07:59.567 - INFO - [GPT] Prompt_tokens: 45,120
+2024-10-07 18:07:59.567 - INFO - [GPT] Caching_tokens: 2,944
+2024-10-07 18:07:59.567 - INFO - [GPT] Total_tokens: 45,308
+2024-10-07 18:07:59.568 - INFO - [GPT] Model_pricing: $0.006659999999999999
+2024-10-07 18:07:59.568 - INFO - [GPT] Result
+2024-10-07 18:07:59.568 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:07:59.707 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:08:00.772 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:08:00.848 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85276000.0, executed_volume:0.0009451, paid:80634.6447738
+2024-10-07 18:08:00.848 - INFO - [Trade] Buy success (+0.0009451 BTC, -80,634.6447738 KRW)
+2024-10-07 18:08:00.855 - INFO - [Trade] Done
+2024-10-07 18:08:00.858 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:18:00.865 - INFO - [Collect] get_latest_news()
+2024-10-07 18:18:00.876 - INFO - [Collect] get_decisions()
+2024-10-07 18:18:01.459 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:18:01.640 - INFO - [Collect] get_chart_data()
+2024-10-07 18:18:01.669 - INFO - [Collect] get_orderbook()
+2024-10-07 18:18:01.751 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:18:01.753 - INFO - [GPT] Make request messages.
+2024-10-07 18:18:01.769 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,109)
+2024-10-07 18:18:09.376 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:18:09.381 - INFO - [GPT] Response GPT
+2024-10-07 18:18:09.381 - INFO - [GPT] Completion_tokens: 187
+2024-10-07 18:18:09.382 - INFO - [GPT] Prompt_tokens: 45,138
+2024-10-07 18:18:09.382 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 18:18:09.382 - INFO - [GPT] Total_tokens: 45,325
+2024-10-07 18:18:09.382 - INFO - [GPT] Model_pricing: $0.0065277
+2024-10-07 18:18:09.383 - INFO - [GPT] Result
+2024-10-07 18:18:09.383 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:18:09.526 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:18:10.598 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:18:10.667 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85207740.93037306, executed_volume:0.0006621, paid:56444.253292635
+2024-10-07 18:18:10.668 - INFO - [Trade] Buy success (+0.0006621 BTC, -56,444.253292635 KRW)
+2024-10-07 18:18:10.676 - INFO - [Trade] Done
+2024-10-07 18:18:10.678 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:28:10.687 - INFO - [Collect] get_latest_news()
+2024-10-07 18:28:10.694 - INFO - [Collect] get_decisions()
+2024-10-07 18:28:11.279 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:28:11.470 - INFO - [Collect] get_chart_data()
+2024-10-07 18:28:11.500 - INFO - [Collect] get_orderbook()
+2024-10-07 18:28:11.579 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:28:11.582 - INFO - [GPT] Make request messages.
+2024-10-07 18:28:11.598 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,131)
+2024-10-07 18:28:19.938 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:28:19.942 - INFO - [GPT] Response GPT
+2024-10-07 18:28:19.942 - INFO - [GPT] Completion_tokens: 169
+2024-10-07 18:28:19.943 - INFO - [GPT] Prompt_tokens: 45,160
+2024-10-07 18:28:19.943 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 18:28:19.943 - INFO - [GPT] Total_tokens: 45,329
+2024-10-07 18:28:19.943 - INFO - [GPT] Model_pricing: $0.0065201999999999994
+2024-10-07 18:28:19.944 - INFO - [GPT] Result
+2024-10-07 18:28:19.944 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:28:20.100 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:28:21.157 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:28:21.248 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85003000.0, executed_volume:0.00046459, paid:39511.289541884995
+2024-10-07 18:28:21.249 - INFO - [Trade] Buy success (+0.00046459 BTC, -39,511.289541884995 KRW)
+2024-10-07 18:28:21.257 - INFO - [Trade] Done
+2024-10-07 18:28:21.259 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:38:21.264 - INFO - [Collect] get_latest_news()
+2024-10-07 18:38:21.276 - INFO - [Collect] get_decisions()
+2024-10-07 18:38:21.842 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:38:22.033 - INFO - [Collect] get_chart_data()
+2024-10-07 18:38:22.061 - INFO - [Collect] get_orderbook()
+2024-10-07 18:38:22.151 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:38:22.154 - INFO - [GPT] Make request messages.
+2024-10-07 18:38:22.173 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,128)
+2024-10-07 18:38:29.712 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:38:29.713 - INFO - [GPT] Response GPT
+2024-10-07 18:38:29.713 - INFO - [GPT] Completion_tokens: 188
+2024-10-07 18:38:29.713 - INFO - [GPT] Prompt_tokens: 45,157
+2024-10-07 18:38:29.713 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 18:38:29.713 - INFO - [GPT] Total_tokens: 45,345
+2024-10-07 18:38:29.713 - INFO - [GPT] Model_pricing: $0.0065311499999999995
+2024-10-07 18:38:29.714 - INFO - [GPT] Result
+2024-10-07 18:38:29.714 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:38:29.839 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:38:30.907 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:38:30.982 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85055000.0, executed_volume:0.00032501, paid:27657.547412775
+2024-10-07 18:38:30.982 - INFO - [Trade] Buy success (+0.00032501 BTC, -27,657.547412775 KRW)
+2024-10-07 18:38:30.990 - INFO - [Trade] Done
+2024-10-07 18:38:30.992 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:48:30.997 - INFO - [Collect] get_latest_news()
+2024-10-07 18:48:31.006 - INFO - [Collect] get_decisions()
+2024-10-07 18:48:31.593 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:48:31.804 - INFO - [Collect] get_chart_data()
+2024-10-07 18:48:31.832 - INFO - [Collect] get_orderbook()
+2024-10-07 18:48:31.916 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:48:31.919 - INFO - [GPT] Make request messages.
+2024-10-07 18:48:31.937 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,112)
+2024-10-07 18:48:38.862 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:48:38.876 - INFO - [GPT] Response GPT
+2024-10-07 18:48:38.876 - INFO - [GPT] Completion_tokens: 180
+2024-10-07 18:48:38.877 - INFO - [GPT] Prompt_tokens: 45,141
+2024-10-07 18:48:38.877 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 18:48:38.877 - INFO - [GPT] Total_tokens: 45,321
+2024-10-07 18:48:38.877 - INFO - [GPT] Model_pricing: $0.00652395
+2024-10-07 18:48:38.878 - INFO - [GPT] Result
+2024-10-07 18:48:38.878 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:48:39.014 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:48:40.077 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:48:40.151 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85062000.0, executed_volume:0.00022749, paid:19360.42975719
+2024-10-07 18:48:40.151 - INFO - [Trade] Buy success (+0.00022749 BTC, -19,360.42975719 KRW)
+2024-10-07 18:48:40.157 - INFO - [Trade] Done
+2024-10-07 18:48:40.159 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 18:58:40.177 - INFO - [Collect] get_latest_news()
+2024-10-07 18:58:40.187 - INFO - [Collect] get_decisions()
+2024-10-07 18:58:40.775 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 18:58:40.967 - INFO - [Collect] get_chart_data()
+2024-10-07 18:58:41.001 - INFO - [Collect] get_orderbook()
+2024-10-07 18:58:41.096 - INFO - [Collect] get_current_wallet()
+2024-10-07 18:58:41.100 - INFO - [GPT] Make request messages.
+2024-10-07 18:58:41.120 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,116)
+2024-10-07 18:58:49.064 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 18:58:49.069 - INFO - [GPT] Response GPT
+2024-10-07 18:58:49.069 - INFO - [GPT] Completion_tokens: 190
+2024-10-07 18:58:49.070 - INFO - [GPT] Prompt_tokens: 45,145
+2024-10-07 18:58:49.070 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 18:58:49.070 - INFO - [GPT] Total_tokens: 45,335
+2024-10-07 18:58:49.071 - INFO - [GPT] Model_pricing: $0.0068857499999999995
+2024-10-07 18:58:49.071 - INFO - [GPT] Result
+2024-10-07 18:58:49.071 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 18:58:49.230 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 18:58:50.298 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 18:58:50.374 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=85007000.0, executed_volume:0.00015935, paid:13552.638382725
+2024-10-07 18:58:50.374 - INFO - [Trade] Buy success (+0.00015935 BTC, -13,552.638382725 KRW)
+2024-10-07 18:58:50.383 - INFO - [Trade] Done
+2024-10-07 18:58:50.387 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:08:59.082 - INFO - [Collect] get_latest_news()
+2024-10-07 19:08:59.091 - INFO - [Collect] get_decisions()
+2024-10-07 19:08:59.661 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:08:59.851 - INFO - [Collect] get_chart_data()
+2024-10-07 19:08:59.884 - INFO - [Collect] get_orderbook()
+2024-10-07 19:08:59.971 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:08:59.973 - INFO - [GPT] Make request messages.
+2024-10-07 19:08:59.993 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,171)
+2024-10-07 19:09:07.170 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:09:07.173 - INFO - [GPT] Response GPT
+2024-10-07 19:09:07.174 - INFO - [GPT] Completion_tokens: 186
+2024-10-07 19:09:07.174 - INFO - [GPT] Prompt_tokens: 45,200
+2024-10-07 19:09:07.174 - INFO - [GPT] Caching_tokens: 2,944
+2024-10-07 19:09:07.174 - INFO - [GPT] Total_tokens: 45,386
+2024-10-07 19:09:07.174 - INFO - [GPT] Model_pricing: $0.0066708
+2024-10-07 19:09:07.174 - INFO - [GPT] Result
+2024-10-07 19:09:07.174 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:09:07.331 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 19:09:08.397 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 19:09:08.478 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=84959000.0, executed_volume:0.0001116, paid:9486.1651122
+2024-10-07 19:09:08.478 - INFO - [Trade] Buy success (+0.0001116 BTC, -9,486.1651122 KRW)
+2024-10-07 19:09:08.485 - INFO - [Trade] Done
+2024-10-07 19:09:08.487 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:19:08.499 - INFO - [Collect] get_latest_news()
+2024-10-07 19:19:08.512 - INFO - [Collect] get_decisions()
+2024-10-07 19:19:09.097 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:19:09.289 - INFO - [Collect] get_chart_data()
+2024-10-07 19:19:09.314 - INFO - [Collect] get_orderbook()
+2024-10-07 19:19:09.398 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:19:09.402 - INFO - [GPT] Make request messages.
+2024-10-07 19:19:09.420 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,181)
+2024-10-07 19:19:16.935 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:19:16.941 - INFO - [GPT] Response GPT
+2024-10-07 19:19:16.942 - INFO - [GPT] Completion_tokens: 182
+2024-10-07 19:19:16.942 - INFO - [GPT] Prompt_tokens: 45,210
+2024-10-07 19:19:16.942 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 19:19:16.942 - INFO - [GPT] Total_tokens: 45,392
+2024-10-07 19:19:16.942 - INFO - [GPT] Model_pricing: $0.0065355000000000005
+2024-10-07 19:19:16.942 - INFO - [GPT] Result
+2024-10-07 19:19:16.942 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:19:17.072 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5] Ordered
+2024-10-07 19:19:18.134 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) Validate
+2024-10-07 19:19:18.230 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%): price=84873000.0, executed_volume:7.82e-05, paid:6640.387134299999
+2024-10-07 19:19:18.231 - INFO - [Trade] Buy success (+7.82e-05 BTC, -6,640.387134299999 KRW)
+2024-10-07 19:19:18.242 - INFO - [Trade] Done
+2024-10-07 19:19:18.245 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:29:18.252 - INFO - [Collect] get_latest_news()
+2024-10-07 19:29:18.259 - INFO - [Collect] get_decisions()
+2024-10-07 19:29:18.840 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:29:18.996 - INFO - [Collect] get_chart_data()
+2024-10-07 19:29:19.025 - INFO - [Collect] get_orderbook()
+2024-10-07 19:29:19.106 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:29:19.106 - INFO - [GPT] Make request messages.
+2024-10-07 19:29:19.121 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,210)
+2024-10-07 19:29:26.607 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:29:26.608 - INFO - [GPT] Response GPT
+2024-10-07 19:29:26.609 - INFO - [GPT] Completion_tokens: 191
+2024-10-07 19:29:26.609 - INFO - [GPT] Prompt_tokens: 45,239
+2024-10-07 19:29:26.609 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 19:29:26.609 - INFO - [GPT] Total_tokens: 45,430
+2024-10-07 19:29:26.609 - INFO - [GPT] Model_pricing: $0.00654525
+2024-10-07 19:29:26.609 - INFO - [GPT] Result
+2024-10-07 19:29:26.609 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:29:26.672 - INFO - [Trade] Buy failed
+2024-10-07 19:29:26.687 - INFO - [Trade] Done
+2024-10-07 19:29:26.690 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:39:26.699 - INFO - [Collect] get_latest_news()
+2024-10-07 19:39:26.705 - INFO - [Collect] get_decisions()
+2024-10-07 19:39:27.313 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:39:27.507 - INFO - [Collect] get_chart_data()
+2024-10-07 19:39:27.540 - INFO - [Collect] get_orderbook()
+2024-10-07 19:39:27.635 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:39:27.638 - INFO - [GPT] Make request messages.
+2024-10-07 19:39:27.668 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 46,057)
+2024-10-07 19:39:35.169 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:39:35.174 - INFO - [GPT] Response GPT
+2024-10-07 19:39:35.174 - INFO - [GPT] Completion_tokens: 197
+2024-10-07 19:39:35.174 - INFO - [GPT] Prompt_tokens: 45,086
+2024-10-07 19:39:35.175 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 19:39:35.175 - INFO - [GPT] Total_tokens: 45,283
+2024-10-07 19:39:35.175 - INFO - [GPT] Model_pricing: $0.006881099999999999
+2024-10-07 19:39:35.176 - INFO - [GPT] Result
+2024-10-07 19:39:35.176 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:39:35.237 - INFO - [Trade] Buy failed
+2024-10-07 19:39:35.256 - INFO - [Trade] Done
+2024-10-07 19:39:35.259 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:49:35.262 - INFO - [Collect] get_latest_news()
+2024-10-07 19:49:35.269 - INFO - [Collect] get_decisions()
+2024-10-07 19:49:35.889 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:49:36.081 - INFO - [Collect] get_chart_data()
+2024-10-07 19:49:36.106 - INFO - [Collect] get_orderbook()
+2024-10-07 19:49:36.191 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:49:36.194 - INFO - [GPT] Make request messages.
+2024-10-07 19:49:36.218 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,920)
+2024-10-07 19:49:44.018 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:49:44.022 - INFO - [GPT] Response GPT
+2024-10-07 19:49:44.023 - INFO - [GPT] Completion_tokens: 156
+2024-10-07 19:49:44.023 - INFO - [GPT] Prompt_tokens: 44,949
+2024-10-07 19:49:44.023 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 19:49:44.024 - INFO - [GPT] Total_tokens: 45,105
+2024-10-07 19:49:44.024 - INFO - [GPT] Model_pricing: $0.00683595
+2024-10-07 19:49:44.024 - INFO - [GPT] Result
+2024-10-07 19:49:44.024 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:49:44.088 - INFO - [Trade] Buy failed
+2024-10-07 19:49:44.099 - INFO - [Trade] Done
+2024-10-07 19:49:44.102 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 19:59:44.119 - INFO - [Collect] get_latest_news()
+2024-10-07 19:59:44.124 - INFO - [Collect] get_decisions()
+2024-10-07 19:59:44.706 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 19:59:44.887 - INFO - [Collect] get_chart_data()
+2024-10-07 19:59:44.917 - INFO - [Collect] get_orderbook()
+2024-10-07 19:59:45.010 - INFO - [Collect] get_current_wallet()
+2024-10-07 19:59:45.012 - INFO - [GPT] Make request messages.
+2024-10-07 19:59:45.032 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,726)
+2024-10-07 19:59:51.983 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 19:59:51.998 - INFO - [GPT] Response GPT
+2024-10-07 19:59:51.999 - INFO - [GPT] Completion_tokens: 171
+2024-10-07 19:59:52.000 - INFO - [GPT] Prompt_tokens: 44,755
+2024-10-07 19:59:52.000 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 19:59:52.001 - INFO - [GPT] Total_tokens: 44,926
+2024-10-07 19:59:52.001 - INFO - [GPT] Model_pricing: $0.00646065
+2024-10-07 19:59:52.001 - INFO - [GPT] Result
+2024-10-07 19:59:52.002 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 19:59:52.054 - INFO - [Trade] Buy failed
+2024-10-07 19:59:52.067 - INFO - [Trade] Done
+2024-10-07 19:59:52.071 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 20:10:02.090 - INFO - [Collect] get_latest_news()
+2024-10-07 20:10:02.105 - INFO - [Collect] get_decisions()
+2024-10-07 20:10:02.674 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 20:10:02.846 - INFO - [Collect] get_chart_data()
+2024-10-07 20:10:02.876 - INFO - [Collect] get_orderbook()
+2024-10-07 20:10:02.954 - INFO - [Collect] get_current_wallet()
+2024-10-07 20:10:02.954 - INFO - [GPT] Make request messages.
+2024-10-07 20:10:02.970 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,537)
+2024-10-07 20:10:13.152 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 20:10:13.155 - INFO - [GPT] Response GPT
+2024-10-07 20:10:13.155 - INFO - [GPT] Completion_tokens: 159
+2024-10-07 20:10:13.155 - INFO - [GPT] Prompt_tokens: 44,566
+2024-10-07 20:10:13.156 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 20:10:13.156 - INFO - [GPT] Total_tokens: 44,725
+2024-10-07 20:10:13.156 - INFO - [GPT] Model_pricing: $0.0067802999999999995
+2024-10-07 20:10:13.156 - INFO - [GPT] Result
+2024-10-07 20:10:13.157 - INFO - [Trade] Hold
+2024-10-07 20:10:13.173 - INFO - [Trade] Done
+2024-10-07 20:10:13.176 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 20:20:13.183 - INFO - [Collect] get_latest_news()
+2024-10-07 20:20:13.191 - INFO - [Collect] get_decisions()
+2024-10-07 20:20:13.773 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 20:20:13.982 - INFO - [Collect] get_chart_data()
+2024-10-07 20:20:14.015 - INFO - [Collect] get_orderbook()
+2024-10-07 20:20:14.118 - INFO - [Collect] get_current_wallet()
+2024-10-07 20:20:14.120 - INFO - [GPT] Make request messages.
+2024-10-07 20:20:14.137 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,374)
+2024-10-07 20:20:20.892 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 20:20:20.896 - INFO - [GPT] Response GPT
+2024-10-07 20:20:20.897 - INFO - [GPT] Completion_tokens: 141
+2024-10-07 20:20:20.897 - INFO - [GPT] Prompt_tokens: 44,403
+2024-10-07 20:20:20.898 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 20:20:20.898 - INFO - [GPT] Total_tokens: 44,544
+2024-10-07 20:20:20.899 - INFO - [GPT] Model_pricing: $0.00638985
+2024-10-07 20:20:20.899 - INFO - [GPT] Result
+2024-10-07 20:20:20.899 - INFO - [Trade] Hold
+2024-10-07 20:20:20.917 - INFO - [Trade] Done
+2024-10-07 20:20:20.919 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 20:30:20.921 - INFO - [Collect] get_latest_news()
+2024-10-07 20:30:20.925 - INFO - [Collect] get_decisions()
+2024-10-07 20:30:21.503 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 20:30:21.712 - INFO - [Collect] get_chart_data()
+2024-10-07 20:30:21.751 - INFO - [Collect] get_orderbook()
+2024-10-07 20:30:21.837 - INFO - [Collect] get_current_wallet()
+2024-10-07 20:30:21.839 - INFO - [GPT] Make request messages.
+2024-10-07 20:30:21.856 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,164)
+2024-10-07 20:30:28.654 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 20:30:28.666 - INFO - [GPT] Response GPT
+2024-10-07 20:30:28.667 - INFO - [GPT] Completion_tokens: 163
+2024-10-07 20:30:28.667 - INFO - [GPT] Prompt_tokens: 44,193
+2024-10-07 20:30:28.667 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 20:30:28.667 - INFO - [GPT] Total_tokens: 44,356
+2024-10-07 20:30:28.667 - INFO - [GPT] Model_pricing: $0.00637155
+2024-10-07 20:30:28.668 - INFO - [GPT] Result
+2024-10-07 20:30:28.668 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 20:30:28.741 - INFO - [Trade] Buy failed
+2024-10-07 20:30:28.748 - INFO - [Trade] Done
+2024-10-07 20:30:28.750 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 20:40:28.759 - INFO - [Collect] get_latest_news()
+2024-10-07 20:40:28.766 - INFO - [Collect] get_decisions()
+2024-10-07 20:40:29.349 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 20:40:29.501 - INFO - [Collect] get_chart_data()
+2024-10-07 20:40:29.532 - INFO - [Collect] get_orderbook()
+2024-10-07 20:40:29.608 - INFO - [Collect] get_current_wallet()
+2024-10-07 20:40:29.610 - INFO - [GPT] Make request messages.
+2024-10-07 20:40:29.629 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 45,010)
+2024-10-07 20:40:36.493 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 20:40:36.508 - INFO - [GPT] Response GPT
+2024-10-07 20:40:36.508 - INFO - [GPT] Completion_tokens: 158
+2024-10-07 20:40:36.508 - INFO - [GPT] Prompt_tokens: 44,039
+2024-10-07 20:40:36.509 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 20:40:36.509 - INFO - [GPT] Total_tokens: 44,197
+2024-10-07 20:40:36.509 - INFO - [GPT] Model_pricing: $0.00670065
+2024-10-07 20:40:36.510 - INFO - [GPT] Result
+2024-10-07 20:40:36.510 - INFO - [Trade] Hold
+2024-10-07 20:40:36.517 - INFO - [Trade] Done
+2024-10-07 20:40:36.521 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 20:50:36.530 - INFO - [Collect] get_latest_news()
+2024-10-07 20:50:36.536 - INFO - [Collect] get_decisions()
+2024-10-07 20:50:37.116 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 20:50:37.299 - INFO - [Collect] get_chart_data()
+2024-10-07 20:50:37.327 - INFO - [Collect] get_orderbook()
+2024-10-07 20:50:37.405 - INFO - [Collect] get_current_wallet()
+2024-10-07 20:50:37.408 - INFO - [GPT] Make request messages.
+2024-10-07 20:50:37.427 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,799)
+2024-10-07 20:50:44.747 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 20:50:44.751 - INFO - [GPT] Response GPT
+2024-10-07 20:50:44.751 - INFO - [GPT] Completion_tokens: 167
+2024-10-07 20:50:44.752 - INFO - [GPT] Prompt_tokens: 43,828
+2024-10-07 20:50:44.753 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 20:50:44.753 - INFO - [GPT] Total_tokens: 43,995
+2024-10-07 20:50:44.753 - INFO - [GPT] Model_pricing: $0.0066744
+2024-10-07 20:50:44.753 - INFO - [GPT] Result
+2024-10-07 20:50:44.754 - INFO - [Trade] Hold
+2024-10-07 20:50:44.771 - INFO - [Trade] Done
+2024-10-07 20:50:44.775 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:00:53.808 - INFO - [Collect] get_latest_news()
+2024-10-07 21:00:53.820 - INFO - [Collect] get_decisions()
+2024-10-07 21:00:54.392 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:00:54.589 - INFO - [Collect] get_chart_data()
+2024-10-07 21:00:54.619 - INFO - [Collect] get_orderbook()
+2024-10-07 21:00:54.701 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:00:54.704 - INFO - [GPT] Make request messages.
+2024-10-07 21:00:54.719 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,640)
+2024-10-07 21:01:01.016 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:01:01.020 - INFO - [GPT] Response GPT
+2024-10-07 21:01:01.020 - INFO - [GPT] Completion_tokens: 156
+2024-10-07 21:01:01.021 - INFO - [GPT] Prompt_tokens: 43,669
+2024-10-07 21:01:01.021 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 21:01:01.022 - INFO - [GPT] Total_tokens: 43,825
+2024-10-07 21:01:01.022 - INFO - [GPT] Model_pricing: $0.00664395
+2024-10-07 21:01:01.022 - INFO - [GPT] Result
+2024-10-07 21:01:01.022 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 21:01:01.107 - INFO - [Trade] Buy failed
+2024-10-07 21:01:01.117 - INFO - [Trade] Done
+2024-10-07 21:01:01.121 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:11:01.131 - INFO - [Collect] get_latest_news()
+2024-10-07 21:11:01.139 - INFO - [Collect] get_decisions()
+2024-10-07 21:11:01.713 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:11:01.886 - INFO - [Collect] get_chart_data()
+2024-10-07 21:11:01.918 - INFO - [Collect] get_orderbook()
+2024-10-07 21:11:01.998 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:11:02.001 - INFO - [GPT] Make request messages.
+2024-10-07 21:11:02.024 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,454)
+2024-10-07 21:11:09.961 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:11:09.962 - INFO - [GPT] Response GPT
+2024-10-07 21:11:09.962 - INFO - [GPT] Completion_tokens: 168
+2024-10-07 21:11:09.962 - INFO - [GPT] Prompt_tokens: 43,484
+2024-10-07 21:11:09.962 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 21:11:09.963 - INFO - [GPT] Total_tokens: 43,652
+2024-10-07 21:11:09.963 - INFO - [GPT] Model_pricing: $0.0066234
+2024-10-07 21:11:09.963 - INFO - [GPT] Result
+2024-10-07 21:11:09.963 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 21:11:10.031 - INFO - [Trade] Buy failed
+2024-10-07 21:11:10.041 - INFO - [Trade] Done
+2024-10-07 21:11:10.043 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:21:10.060 - INFO - [Collect] get_latest_news()
+2024-10-07 21:21:10.071 - INFO - [Collect] get_decisions()
+2024-10-07 21:21:10.646 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:21:10.842 - INFO - [Collect] get_chart_data()
+2024-10-07 21:21:10.878 - INFO - [Collect] get_orderbook()
+2024-10-07 21:21:10.961 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:21:10.962 - INFO - [GPT] Make request messages.
+2024-10-07 21:21:10.975 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,431)
+2024-10-07 21:21:18.320 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:21:18.324 - INFO - [GPT] Response GPT
+2024-10-07 21:21:18.324 - INFO - [GPT] Completion_tokens: 158
+2024-10-07 21:21:18.325 - INFO - [GPT] Prompt_tokens: 43,461
+2024-10-07 21:21:18.325 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 21:21:18.325 - INFO - [GPT] Total_tokens: 43,619
+2024-10-07 21:21:18.326 - INFO - [GPT] Model_pricing: $0.00625875
+2024-10-07 21:21:18.326 - INFO - [GPT] Result
+2024-10-07 21:21:18.326 - INFO - [Trade] Hold
+2024-10-07 21:21:18.342 - INFO - [Trade] Done
+2024-10-07 21:21:18.346 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:31:18.354 - INFO - [Collect] get_latest_news()
+2024-10-07 21:31:18.365 - INFO - [Collect] get_decisions()
+2024-10-07 21:31:18.934 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:31:19.108 - INFO - [Collect] get_chart_data()
+2024-10-07 21:31:19.137 - INFO - [Collect] get_orderbook()
+2024-10-07 21:31:19.233 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:31:19.235 - INFO - [GPT] Make request messages.
+2024-10-07 21:31:19.257 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,382)
+2024-10-07 21:31:29.459 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:31:29.460 - INFO - [GPT] Response GPT
+2024-10-07 21:31:29.460 - INFO - [GPT] Completion_tokens: 163
+2024-10-07 21:31:29.460 - INFO - [GPT] Prompt_tokens: 43,412
+2024-10-07 21:31:29.460 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 21:31:29.460 - INFO - [GPT] Total_tokens: 43,575
+2024-10-07 21:31:29.460 - INFO - [GPT] Model_pricing: $0.0062544
+2024-10-07 21:31:29.460 - INFO - [GPT] Result
+2024-10-07 21:31:29.460 - INFO - [Trade] Hold
+2024-10-07 21:31:29.475 - INFO - [Trade] Done
+2024-10-07 21:31:29.478 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:41:29.486 - INFO - [Collect] get_latest_news()
+2024-10-07 21:41:29.492 - INFO - [Collect] get_decisions()
+2024-10-07 21:41:30.060 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:41:30.240 - INFO - [Collect] get_chart_data()
+2024-10-07 21:41:30.269 - INFO - [Collect] get_orderbook()
+2024-10-07 21:41:30.350 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:41:30.353 - INFO - [GPT] Make request messages.
+2024-10-07 21:41:30.372 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,398)
+2024-10-07 21:41:38.925 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:41:38.927 - INFO - [GPT] Response GPT
+2024-10-07 21:41:38.927 - INFO - [GPT] Completion_tokens: 158
+2024-10-07 21:41:38.927 - INFO - [GPT] Prompt_tokens: 43,428
+2024-10-07 21:41:38.927 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 21:41:38.927 - INFO - [GPT] Total_tokens: 43,586
+2024-10-07 21:41:38.927 - INFO - [GPT] Model_pricing: $0.0062537999999999995
+2024-10-07 21:41:38.927 - INFO - [GPT] Result
+2024-10-07 21:41:38.927 - INFO - [Trade] Hold
+2024-10-07 21:41:38.941 - INFO - [Trade] Done
+2024-10-07 21:41:38.943 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 21:51:38.960 - INFO - [Collect] get_latest_news()
+2024-10-07 21:51:38.966 - INFO - [Collect] get_decisions()
+2024-10-07 21:51:39.586 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 21:51:39.764 - INFO - [Collect] get_chart_data()
+2024-10-07 21:51:39.788 - INFO - [Collect] get_orderbook()
+2024-10-07 21:51:39.864 - INFO - [Collect] get_current_wallet()
+2024-10-07 21:51:39.867 - INFO - [GPT] Make request messages.
+2024-10-07 21:51:39.882 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,386)
+2024-10-07 21:51:47.619 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 21:51:47.633 - INFO - [GPT] Response GPT
+2024-10-07 21:51:47.633 - INFO - [GPT] Completion_tokens: 156
+2024-10-07 21:51:47.634 - INFO - [GPT] Prompt_tokens: 43,416
+2024-10-07 21:51:47.634 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 21:51:47.635 - INFO - [GPT] Total_tokens: 43,572
+2024-10-07 21:51:47.635 - INFO - [GPT] Model_pricing: $0.0062508
+2024-10-07 21:51:47.635 - INFO - [GPT] Result
+2024-10-07 21:51:47.636 - INFO - [Trade] Hold
+2024-10-07 21:51:47.643 - INFO - [Trade] Done
+2024-10-07 21:51:47.646 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:01:56.895 - INFO - [Collect] get_latest_news()
+2024-10-07 22:01:56.905 - INFO - [Collect] get_decisions()
+2024-10-07 22:01:57.481 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:01:57.674 - INFO - [Collect] get_chart_data()
+2024-10-07 22:01:57.704 - INFO - [Collect] get_orderbook()
+2024-10-07 22:01:57.788 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:01:57.789 - INFO - [GPT] Make request messages.
+2024-10-07 22:01:57.803 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,371)
+2024-10-07 22:02:05.290 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:02:05.303 - INFO - [GPT] Response GPT
+2024-10-07 22:02:05.303 - INFO - [GPT] Completion_tokens: 162
+2024-10-07 22:02:05.304 - INFO - [GPT] Prompt_tokens: 43,402
+2024-10-07 22:02:05.304 - INFO - [GPT] Caching_tokens: 2,944
+2024-10-07 22:02:05.304 - INFO - [GPT] Total_tokens: 43,564
+2024-10-07 22:02:05.305 - INFO - [GPT] Model_pricing: $0.0063867
+2024-10-07 22:02:05.305 - INFO - [GPT] Result
+2024-10-07 22:02:05.305 - INFO - [Trade] Hold
+2024-10-07 22:02:05.314 - INFO - [Trade] Done
+2024-10-07 22:02:05.318 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:12:05.323 - INFO - [Collect] get_latest_news()
+2024-10-07 22:12:05.336 - INFO - [Collect] get_decisions()
+2024-10-07 22:12:05.925 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:12:06.107 - INFO - [Collect] get_chart_data()
+2024-10-07 22:12:06.138 - INFO - [Collect] get_orderbook()
+2024-10-07 22:12:06.210 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:12:06.212 - INFO - [GPT] Make request messages.
+2024-10-07 22:12:06.228 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,391)
+2024-10-07 22:12:13.947 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:12:13.948 - INFO - [GPT] Response GPT
+2024-10-07 22:12:13.948 - INFO - [GPT] Completion_tokens: 158
+2024-10-07 22:12:13.948 - INFO - [GPT] Prompt_tokens: 43,422
+2024-10-07 22:12:13.949 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 22:12:13.949 - INFO - [GPT] Total_tokens: 43,580
+2024-10-07 22:12:13.949 - INFO - [GPT] Model_pricing: $0.0066081
+2024-10-07 22:12:13.949 - INFO - [GPT] Result
+2024-10-07 22:12:13.949 - INFO - [Trade] Hold
+2024-10-07 22:12:13.962 - INFO - [Trade] Done
+2024-10-07 22:12:13.964 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:22:13.973 - INFO - [Collect] get_latest_news()
+2024-10-07 22:22:13.980 - INFO - [Collect] get_decisions()
+2024-10-07 22:22:14.549 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:22:14.735 - INFO - [Collect] get_chart_data()
+2024-10-07 22:22:14.763 - INFO - [Collect] get_orderbook()
+2024-10-07 22:22:14.839 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:22:14.841 - INFO - [GPT] Make request messages.
+2024-10-07 22:22:14.865 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,377)
+2024-10-07 22:22:22.708 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:22:22.712 - INFO - [GPT] Response GPT
+2024-10-07 22:22:22.712 - INFO - [GPT] Completion_tokens: 157
+2024-10-07 22:22:22.713 - INFO - [GPT] Prompt_tokens: 43,408
+2024-10-07 22:22:22.713 - INFO - [GPT] Caching_tokens: 4,736
+2024-10-07 22:22:22.713 - INFO - [GPT] Total_tokens: 43,565
+2024-10-07 22:22:22.714 - INFO - [GPT] Model_pricing: $0.006250199999999999
+2024-10-07 22:22:22.714 - INFO - [GPT] Result
+2024-10-07 22:22:22.714 - INFO - [Trade] Hold
+2024-10-07 22:22:22.729 - INFO - [Trade] Done
+2024-10-07 22:22:22.731 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:32:22.734 - INFO - [Collect] get_latest_news()
+2024-10-07 22:32:22.740 - INFO - [Collect] get_decisions()
+2024-10-07 22:32:23.319 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:32:23.515 - INFO - [Collect] get_chart_data()
+2024-10-07 22:32:23.548 - INFO - [Collect] get_orderbook()
+2024-10-07 22:32:23.636 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:32:23.638 - INFO - [GPT] Make request messages.
+2024-10-07 22:32:23.654 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,380)
+2024-10-07 22:32:31.292 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:32:31.306 - INFO - [GPT] Response GPT
+2024-10-07 22:32:31.306 - INFO - [GPT] Completion_tokens: 157
+2024-10-07 22:32:31.306 - INFO - [GPT] Prompt_tokens: 43,411
+2024-10-07 22:32:31.307 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 22:32:31.307 - INFO - [GPT] Total_tokens: 43,568
+2024-10-07 22:32:31.307 - INFO - [GPT] Model_pricing: $0.00660585
+2024-10-07 22:32:31.307 - INFO - [GPT] Result
+2024-10-07 22:32:31.307 - INFO - [Trade] Hold
+2024-10-07 22:32:31.314 - INFO - [Trade] Done
+2024-10-07 22:32:31.316 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:42:31.331 - INFO - [Collect] get_latest_news()
+2024-10-07 22:42:31.341 - INFO - [Collect] get_decisions()
+2024-10-07 22:42:31.925 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:42:32.121 - INFO - [Collect] get_chart_data()
+2024-10-07 22:42:32.157 - INFO - [Collect] get_orderbook()
+2024-10-07 22:42:32.229 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:42:32.231 - INFO - [GPT] Make request messages.
+2024-10-07 22:42:32.249 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,369)
+2024-10-07 22:42:39.240 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:42:39.252 - INFO - [GPT] Response GPT
+2024-10-07 22:42:39.252 - INFO - [GPT] Completion_tokens: 159
+2024-10-07 22:42:39.252 - INFO - [GPT] Prompt_tokens: 43,400
+2024-10-07 22:42:39.252 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 22:42:39.253 - INFO - [GPT] Total_tokens: 43,559
+2024-10-07 22:42:39.253 - INFO - [GPT] Model_pricing: $0.0066054
+2024-10-07 22:42:39.253 - INFO - [GPT] Result
+2024-10-07 22:42:39.253 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 22:42:39.311 - INFO - [Trade] Buy failed
+2024-10-07 22:42:39.317 - INFO - [Trade] Done
+2024-10-07 22:42:39.320 - INFO - [AutoTrade] Wait for 10 minutes.
+2024-10-07 22:52:39.325 - INFO - [Collect] get_latest_news()
+2024-10-07 22:52:39.330 - INFO - [Collect] get_decisions()
+2024-10-07 22:52:39.917 - INFO - [Collect] get_fear_and_greed_index()
+2024-10-07 22:52:40.091 - INFO - [Collect] get_chart_data()
+2024-10-07 22:52:40.123 - INFO - [Collect] get_orderbook()
+2024-10-07 22:52:40.200 - INFO - [Collect] get_current_wallet()
+2024-10-07 22:52:40.200 - INFO - [GPT] Make request messages.
+2024-10-07 22:52:40.214 - INFO - [GPT] Request GPT(gpt-4o-mini-2024-07-18, ExpectTokens: 44,363)
+2024-10-07 22:52:49.253 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-07 22:52:49.263 - INFO - [GPT] Response GPT
+2024-10-07 22:52:49.263 - INFO - [GPT] Completion_tokens: 171
+2024-10-07 22:52:49.263 - INFO - [GPT] Prompt_tokens: 43,394
+2024-10-07 22:52:49.263 - INFO - [GPT] Caching_tokens: 0
+2024-10-07 22:52:49.263 - INFO - [GPT] Total_tokens: 43,565
+2024-10-07 22:52:49.263 - INFO - [GPT] Model_pricing: $0.0066117
+2024-10-07 22:52:49.263 - INFO - [GPT] Result
+2024-10-07 22:52:49.263 - INFO - [Upbit] execute_buy(KRW-BTC, 30.0%) [1/5]
+2024-10-07 22:52:49.316 - INFO - [Trade] Buy failed
+2024-10-07 22:52:49.323 - INFO - [Trade] Done
+2024-10-07 22:52:49.327 - INFO - [AutoTrade] Wait for 10 minutes.
